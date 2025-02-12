@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Estadística Descriptiva multivariada - Taller Tres</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Estadística Descriptiva multivariada</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Información grupo</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TallerUno.html" rel="" target="">
+ <span class="menu-text">Taller Uno</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TallerDos.html" rel="" target="">
+ <span class="menu-text">Taller Dos</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./TallerTres.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Taller Tres</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#análisis-de-componentes-principales-acp" id="toc-análisis-de-componentes-principales-acp" class="nav-link active" data-scroll-target="#análisis-de-componentes-principales-acp">Análisis de componentes principales (ACP)</a>
+  <ul class="collapse">
+  <li><a href="#acp-para-las-variables" id="toc-acp-para-las-variables" class="nav-link" data-scroll-target="#acp-para-las-variables">ACP para las variables</a></li>
+  <li><a href="#análisis-para-las-ciudades" id="toc-análisis-para-las-ciudades" class="nav-link" data-scroll-target="#análisis-para-las-ciudades">Análisis para las ciudades</a></li>
+  <li><a href="#análisis-tomando-al-conjunto-de-variables-fortalezas-económicasfor-como-ilustrativas" id="toc-análisis-tomando-al-conjunto-de-variables-fortalezas-económicasfor-como-ilustrativas" class="nav-link" data-scroll-target="#análisis-tomando-al-conjunto-de-variables-fortalezas-económicasfor-como-ilustrativas">Análisis tomando al conjunto de variables Fortalezas económicas(FOR) como ilustrativas</a></li>
+  <li><a href="#análisis-para-las-ciudades-con-las-variables-suplementarias" id="toc-análisis-para-las-ciudades-con-las-variables-suplementarias" class="nav-link" data-scroll-target="#análisis-para-las-ciudades-con-las-variables-suplementarias">Análisis para las ciudades con las variables suplementarias</a></li>
+  <li><a href="#acp-tomando-las-ciudades-como-variables" id="toc-acp-tomando-las-ciudades-como-variables" class="nav-link" data-scroll-target="#acp-tomando-las-ciudades-como-variables">ACP tomando las ciudades como variables</a></li>
+  <li><a href="#análisis-para-las-ciudades-con-las-variables-suplementarias-1" id="toc-análisis-para-las-ciudades-con-las-variables-suplementarias-1" class="nav-link" data-scroll-target="#análisis-para-las-ciudades-con-las-variables-suplementarias-1">Análisis para las ciudades con las variables suplementarias</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Taller Tres</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="análisis-de-componentes-principales-acp" class="level1">
+<h1>Análisis de componentes principales (ACP)</h1>
+<section id="acp-para-las-variables" class="level3">
+<h3 class="anchored" data-anchor-id="acp-para-las-variables">ACP para las variables</h3>
+<p>Se toma las variables conformando por el conjunto de variables de recursos humanos(RH) y de Fortalezas economicas (FOR) de las empresas, este agrupamiento de variables se puede ver claramente en la siguiente tabla.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Población de la ciudad</td>
+<td>RH_1</td>
+</tr>
+<tr class="even">
+<td>Tasa de Crecimiento de la Población</td>
+<td>RH_2</td>
+</tr>
+<tr class="odd">
+<td>Tasa de Ocupación</td>
+<td>RH_3</td>
+</tr>
+<tr class="even">
+<td>Tasa Global de Participación</td>
+<td>RH_4</td>
+</tr>
+<tr class="odd">
+<td>Analfabetismo Absoluto</td>
+<td>RH_5</td>
+</tr>
+<tr class="even">
+<td>Cobertura bruta en primaria y secundaria</td>
+<td>RH_6</td>
+</tr>
+<tr class="odd">
+<td>Cobertura bruta en educación superior</td>
+<td>RH_7</td>
+</tr>
+<tr class="even">
+<td>Relación alumno-profesor</td>
+<td>RH_8</td>
+</tr>
+<tr class="odd">
+<td>Calidad de los colegios</td>
+<td>RH_9</td>
+</tr>
+<tr class="even">
+<td>Capacitación para el trabajo</td>
+<td>RH_10</td>
+</tr>
+<tr class="odd">
+<td>Cobertura en salud</td>
+<td>RH_11</td>
+</tr>
+<tr class="even">
+<td>Mortalidad Infantil</td>
+<td>RH_12</td>
+</tr>
+<tr class="odd">
+<td>Delitos contra la formación sexual</td>
+<td>RH_13</td>
+</tr>
+<tr class="even">
+<td>Violencia Intrafamiliar</td>
+<td>RH_14</td>
+</tr>
+<tr class="odd">
+<td>Homicidios</td>
+<td>RH_15</td>
+</tr>
+<tr class="even">
+<td>Secuestros</td>
+<td>RH_16</td>
+</tr>
+<tr class="odd">
+<td>Crecimiento PIB per cápita</td>
+<td>FOR_58</td>
+</tr>
+<tr class="even">
+<td>PIB per cápita</td>
+<td>FOR_59</td>
+</tr>
+<tr class="odd">
+<td>Tasa de Entrada Neta de Empresas</td>
+<td>FOR_60</td>
+</tr>
+<tr class="even">
+<td>NBI</td>
+<td>FOR_61</td>
+</tr>
+<tr class="odd">
+<td>Población Urbana sobre la Población Total</td>
+<td>FOR_62</td>
+</tr>
+<tr class="even">
+<td>Índice de Densidad Industrial</td>
+<td>FOR_63</td>
+</tr>
+<tr class="odd">
+<td>Industrias Altas en conocimiento</td>
+<td>FOR_64</td>
+</tr>
+<tr class="even">
+<td>Índice de Especialización Industrial</td>
+<td>FOR_65</td>
+</tr>
+</tbody>
+</table>
+<p>En las variables anteriomente mostradas se procede a realizar el ACP</p>
+<p>Se calcula el número aproximado de componentes hallando los valores propios de la siguiente matriz que tiene la siguiente forma</p>
+<p><span class="math inline">\(Y = \sum_{\alpha=1}^{p} \sqrt{\lambda_{\alpha}} v_{\alpha} u_{\alpha}'\)</span></p>
+<p>Donde <span class="math inline">\(\lambda\)</span> son los valores propios es decir que son daran la información necesaria para asignar las componentes a las variables.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Valores propios, porcentajes de varianza y de varianza acumulados</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">eigenvalue</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">percentage of variance</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">cumulative percentage of variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">comp 1</td>
+<td style="text-align: right;">6.015</td>
+<td style="text-align: right;">27.340</td>
+<td style="text-align: right;">27.340</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 2</td>
+<td style="text-align: right;">2.935</td>
+<td style="text-align: right;">13.339</td>
+<td style="text-align: right;">40.679</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 3</td>
+<td style="text-align: right;">2.633</td>
+<td style="text-align: right;">11.970</td>
+<td style="text-align: right;">52.650</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 4</td>
+<td style="text-align: right;">2.380</td>
+<td style="text-align: right;">10.816</td>
+<td style="text-align: right;">63.466</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 5</td>
+<td style="text-align: right;">1.592</td>
+<td style="text-align: right;">7.238</td>
+<td style="text-align: right;">70.704</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 6</td>
+<td style="text-align: right;">1.392</td>
+<td style="text-align: right;">6.328</td>
+<td style="text-align: right;">77.032</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 7</td>
+<td style="text-align: right;">1.193</td>
+<td style="text-align: right;">5.421</td>
+<td style="text-align: right;">82.453</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 8</td>
+<td style="text-align: right;">0.960</td>
+<td style="text-align: right;">4.362</td>
+<td style="text-align: right;">86.815</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 9</td>
+<td style="text-align: right;">0.851</td>
+<td style="text-align: right;">3.869</td>
+<td style="text-align: right;">90.684</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 10</td>
+<td style="text-align: right;">0.532</td>
+<td style="text-align: right;">2.417</td>
+<td style="text-align: right;">93.101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 11</td>
+<td style="text-align: right;">0.433</td>
+<td style="text-align: right;">1.968</td>
+<td style="text-align: right;">95.069</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 12</td>
+<td style="text-align: right;">0.336</td>
+<td style="text-align: right;">1.529</td>
+<td style="text-align: right;">96.598</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 13</td>
+<td style="text-align: right;">0.225</td>
+<td style="text-align: right;">1.024</td>
+<td style="text-align: right;">97.622</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 14</td>
+<td style="text-align: right;">0.178</td>
+<td style="text-align: right;">0.809</td>
+<td style="text-align: right;">98.431</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 15</td>
+<td style="text-align: right;">0.150</td>
+<td style="text-align: right;">0.682</td>
+<td style="text-align: right;">99.114</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 16</td>
+<td style="text-align: right;">0.087</td>
+<td style="text-align: right;">0.396</td>
+<td style="text-align: right;">99.509</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 17</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.198</td>
+<td style="text-align: right;">99.707</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 18</td>
+<td style="text-align: right;">0.033</td>
+<td style="text-align: right;">0.150</td>
+<td style="text-align: right;">99.857</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 19</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;">0.102</td>
+<td style="text-align: right;">99.959</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 20</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.041</td>
+<td style="text-align: right;">100.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 21</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Vemos que según los valores propios estos recogen el <span class="math inline">\(70.704 \%\)</span> de la varianza de los datos con cinco componentes, entonces se procede ha análizar si estos componentes explican las relaciones que hay entre los dos conjuntos de variables.</p>
+<p>Ahora se mostrara, la tabla correspondiente a las correlaciones respecto a las componentes propuestas vemos que existen variables que tienen una correlacion buena, es decir que si son en forma positiva son mayores o iguales a <span class="math inline">\(0.6\)</span> o en el caso negativo que son menores o iguales a <span class="math inline">\(-0.6\)</span>. Con esto podemos definir que si las componentes representan la variabilidad de los datos y ademas ver las variables que son relevantes en el estudio.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Correlaciones, Contribuciones y Cos2</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF4</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF5</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF4</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF5</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF4</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">RH_7</td>
+<td style="text-align: right;">0.793</td>
+<td style="text-align: right;">0.269</td>
+<td style="text-align: right;">0.145</td>
+<td style="text-align: right;">0.323</td>
+<td style="text-align: right;">0.028</td>
+<td style="text-align: right;">10.445</td>
+<td style="text-align: right;">2.459</td>
+<td style="text-align: right;">0.795</td>
+<td style="text-align: right;">4.376</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.628</td>
+<td style="text-align: right;">0.072</td>
+<td style="text-align: right;">0.021</td>
+<td style="text-align: right;">0.104</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FOR_65</td>
+<td style="text-align: right;">0.762</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">0.150</td>
+<td style="text-align: right;">-0.404</td>
+<td style="text-align: right;">-0.147</td>
+<td style="text-align: right;">9.651</td>
+<td style="text-align: right;">0.536</td>
+<td style="text-align: right;">0.853</td>
+<td style="text-align: right;">6.848</td>
+<td style="text-align: right;">1.359</td>
+<td style="text-align: right;">0.581</td>
+<td style="text-align: right;">0.016</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;">0.163</td>
+<td style="text-align: right;">0.022</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FOR_63</td>
+<td style="text-align: right;">0.745</td>
+<td style="text-align: right;">0.313</td>
+<td style="text-align: right;">0.242</td>
+<td style="text-align: right;">0.290</td>
+<td style="text-align: right;">-0.208</td>
+<td style="text-align: right;">9.220</td>
+<td style="text-align: right;">3.348</td>
+<td style="text-align: right;">2.221</td>
+<td style="text-align: right;">3.540</td>
+<td style="text-align: right;">2.706</td>
+<td style="text-align: right;">0.555</td>
+<td style="text-align: right;">0.098</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.043</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_9</td>
+<td style="text-align: right;">0.709</td>
+<td style="text-align: right;">-0.155</td>
+<td style="text-align: right;">0.107</td>
+<td style="text-align: right;">0.099</td>
+<td style="text-align: right;">0.477</td>
+<td style="text-align: right;">8.365</td>
+<td style="text-align: right;">0.817</td>
+<td style="text-align: right;">0.438</td>
+<td style="text-align: right;">0.411</td>
+<td style="text-align: right;">14.296</td>
+<td style="text-align: right;">0.503</td>
+<td style="text-align: right;">0.024</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.228</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FOR_59</td>
+<td style="text-align: right;">0.700</td>
+<td style="text-align: right;">0.103</td>
+<td style="text-align: right;">-0.035</td>
+<td style="text-align: right;">0.557</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">8.141</td>
+<td style="text-align: right;">0.359</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">13.030</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">0.490</td>
+<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.310</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FOR_62</td>
+<td style="text-align: right;">0.686</td>
+<td style="text-align: right;">0.453</td>
+<td style="text-align: right;">-0.217</td>
+<td style="text-align: right;">-0.161</td>
+<td style="text-align: right;">-0.081</td>
+<td style="text-align: right;">7.816</td>
+<td style="text-align: right;">6.991</td>
+<td style="text-align: right;">1.792</td>
+<td style="text-align: right;">1.088</td>
+<td style="text-align: right;">0.408</td>
+<td style="text-align: right;">0.470</td>
+<td style="text-align: right;">0.205</td>
+<td style="text-align: right;">0.047</td>
+<td style="text-align: right;">0.026</td>
+<td style="text-align: right;">0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_1</td>
+<td style="text-align: right;">0.579</td>
+<td style="text-align: right;">0.277</td>
+<td style="text-align: right;">0.217</td>
+<td style="text-align: right;">0.535</td>
+<td style="text-align: right;">-0.028</td>
+<td style="text-align: right;">5.573</td>
+<td style="text-align: right;">2.613</td>
+<td style="text-align: right;">1.787</td>
+<td style="text-align: right;">12.033</td>
+<td style="text-align: right;">0.051</td>
+<td style="text-align: right;">0.335</td>
+<td style="text-align: right;">0.077</td>
+<td style="text-align: right;">0.047</td>
+<td style="text-align: right;">0.286</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FOR_64</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;">0.122</td>
+<td style="text-align: right;">0.094</td>
+<td style="text-align: right;">-0.311</td>
+<td style="text-align: right;">-0.110</td>
+<td style="text-align: right;">2.657</td>
+<td style="text-align: right;">0.504</td>
+<td style="text-align: right;">0.333</td>
+<td style="text-align: right;">4.064</td>
+<td style="text-align: right;">0.766</td>
+<td style="text-align: right;">0.160</td>
+<td style="text-align: right;">0.015</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">0.012</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FOR_58</td>
+<td style="text-align: right;">0.219</td>
+<td style="text-align: right;">-0.252</td>
+<td style="text-align: right;">0.688</td>
+<td style="text-align: right;">-0.385</td>
+<td style="text-align: right;">0.214</td>
+<td style="text-align: right;">0.798</td>
+<td style="text-align: right;">2.166</td>
+<td style="text-align: right;">17.996</td>
+<td style="text-align: right;">6.231</td>
+<td style="text-align: right;">2.886</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">0.474</td>
+<td style="text-align: right;">0.148</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_11</td>
+<td style="text-align: right;">0.210</td>
+<td style="text-align: right;">0.083</td>
+<td style="text-align: right;">0.449</td>
+<td style="text-align: right;">0.214</td>
+<td style="text-align: right;">0.205</td>
+<td style="text-align: right;">0.733</td>
+<td style="text-align: right;">0.236</td>
+<td style="text-align: right;">7.643</td>
+<td style="text-align: right;">1.932</td>
+<td style="text-align: right;">2.628</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.007</td>
+<td style="text-align: right;">0.201</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.042</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FOR_60</td>
+<td style="text-align: right;">0.198</td>
+<td style="text-align: right;">0.195</td>
+<td style="text-align: right;">-0.387</td>
+<td style="text-align: right;">0.073</td>
+<td style="text-align: right;">-0.620</td>
+<td style="text-align: right;">0.650</td>
+<td style="text-align: right;">1.298</td>
+<td style="text-align: right;">5.681</td>
+<td style="text-align: right;">0.221</td>
+<td style="text-align: right;">24.127</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;">0.150</td>
+<td style="text-align: right;">0.005</td>
+<td style="text-align: right;">0.384</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_6</td>
+<td style="text-align: right;">0.173</td>
+<td style="text-align: right;">0.580</td>
+<td style="text-align: right;">-0.068</td>
+<td style="text-align: right;">-0.669</td>
+<td style="text-align: right;">-0.028</td>
+<td style="text-align: right;">0.498</td>
+<td style="text-align: right;">11.472</td>
+<td style="text-align: right;">0.177</td>
+<td style="text-align: right;">18.782</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">0.337</td>
+<td style="text-align: right;">0.005</td>
+<td style="text-align: right;">0.447</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_15</td>
+<td style="text-align: right;">0.102</td>
+<td style="text-align: right;">-0.054</td>
+<td style="text-align: right;">-0.084</td>
+<td style="text-align: right;">-0.318</td>
+<td style="text-align: right;">0.453</td>
+<td style="text-align: right;">0.173</td>
+<td style="text-align: right;">0.101</td>
+<td style="text-align: right;">0.271</td>
+<td style="text-align: right;">4.261</td>
+<td style="text-align: right;">12.898</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.007</td>
+<td style="text-align: right;">0.101</td>
+<td style="text-align: right;">0.205</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_14</td>
+<td style="text-align: right;">0.095</td>
+<td style="text-align: right;">0.251</td>
+<td style="text-align: right;">-0.854</td>
+<td style="text-align: right;">-0.060</td>
+<td style="text-align: right;">0.214</td>
+<td style="text-align: right;">0.149</td>
+<td style="text-align: right;">2.141</td>
+<td style="text-align: right;">27.706</td>
+<td style="text-align: right;">0.153</td>
+<td style="text-align: right;">2.880</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.063</td>
+<td style="text-align: right;">0.730</td>
+<td style="text-align: right;">0.004</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_10</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;">-0.380</td>
+<td style="text-align: right;">-0.012</td>
+<td style="text-align: right;">-0.343</td>
+<td style="text-align: right;">-0.040</td>
+<td style="text-align: right;">0.008</td>
+<td style="text-align: right;">4.924</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">4.957</td>
+<td style="text-align: right;">0.098</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.144</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.118</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_13</td>
+<td style="text-align: right;">-0.107</td>
+<td style="text-align: right;">0.305</td>
+<td style="text-align: right;">-0.697</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">0.461</td>
+<td style="text-align: right;">0.191</td>
+<td style="text-align: right;">3.170</td>
+<td style="text-align: right;">18.432</td>
+<td style="text-align: right;">0.392</td>
+<td style="text-align: right;">13.355</td>
+<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.093</td>
+<td style="text-align: right;">0.485</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.213</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_16</td>
+<td style="text-align: right;">-0.191</td>
+<td style="text-align: right;">-0.599</td>
+<td style="text-align: right;">-0.312</td>
+<td style="text-align: right;">0.524</td>
+<td style="text-align: right;">-0.087</td>
+<td style="text-align: right;">0.605</td>
+<td style="text-align: right;">12.207</td>
+<td style="text-align: right;">3.685</td>
+<td style="text-align: right;">11.522</td>
+<td style="text-align: right;">0.472</td>
+<td style="text-align: right;">0.036</td>
+<td style="text-align: right;">0.358</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">0.274</td>
+<td style="text-align: right;">0.008</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_8</td>
+<td style="text-align: right;">-0.422</td>
+<td style="text-align: right;">0.786</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">-0.057</td>
+<td style="text-align: right;">-0.164</td>
+<td style="text-align: right;">2.966</td>
+<td style="text-align: right;">21.064</td>
+<td style="text-align: right;">0.057</td>
+<td style="text-align: right;">0.136</td>
+<td style="text-align: right;">1.681</td>
+<td style="text-align: right;">0.178</td>
+<td style="text-align: right;">0.618</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.027</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_12</td>
+<td style="text-align: right;">-0.467</td>
+<td style="text-align: right;">0.399</td>
+<td style="text-align: right;">0.249</td>
+<td style="text-align: right;">0.145</td>
+<td style="text-align: right;">0.384</td>
+<td style="text-align: right;">3.624</td>
+<td style="text-align: right;">5.414</td>
+<td style="text-align: right;">2.357</td>
+<td style="text-align: right;">0.890</td>
+<td style="text-align: right;">9.240</td>
+<td style="text-align: right;">0.218</td>
+<td style="text-align: right;">0.159</td>
+<td style="text-align: right;">0.062</td>
+<td style="text-align: right;">0.021</td>
+<td style="text-align: right;">0.147</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_2</td>
+<td style="text-align: right;">-0.629</td>
+<td style="text-align: right;">0.519</td>
+<td style="text-align: right;">0.146</td>
+<td style="text-align: right;">0.315</td>
+<td style="text-align: right;">0.267</td>
+<td style="text-align: right;">6.581</td>
+<td style="text-align: right;">9.195</td>
+<td style="text-align: right;">0.815</td>
+<td style="text-align: right;">4.173</td>
+<td style="text-align: right;">4.480</td>
+<td style="text-align: right;">0.396</td>
+<td style="text-align: right;">0.270</td>
+<td style="text-align: right;">0.021</td>
+<td style="text-align: right;">0.099</td>
+<td style="text-align: right;">0.071</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_5</td>
+<td style="text-align: right;">-0.728</td>
+<td style="text-align: right;">0.513</td>
+<td style="text-align: right;">0.371</td>
+<td style="text-align: right;">0.053</td>
+<td style="text-align: right;">-0.042</td>
+<td style="text-align: right;">8.811</td>
+<td style="text-align: right;">8.985</td>
+<td style="text-align: right;">5.234</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">0.113</td>
+<td style="text-align: right;">0.530</td>
+<td style="text-align: right;">0.264</td>
+<td style="text-align: right;">0.138</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FOR_61</td>
+<td style="text-align: right;">-0.862</td>
+<td style="text-align: right;">-0.003</td>
+<td style="text-align: right;">0.210</td>
+<td style="text-align: right;">0.142</td>
+<td style="text-align: right;">-0.293</td>
+<td style="text-align: right;">12.344</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.674</td>
+<td style="text-align: right;">0.846</td>
+<td style="text-align: right;">5.403</td>
+<td style="text-align: right;">0.742</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.044</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.086</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Al realizar el análisis de las cinco componentes podemos escoger las variables que aportan información a cada componente que tiene la siguiente agrupación.</p>
+<section id="componente-uno" class="level5">
+<h5 class="anchored" data-anchor-id="componente-uno">Componente uno:</h5>
+<p>Este grupo de variables hacer referencia ha una forma de medir el desarrollo a un nivel social con un enfoque empresarial.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tasa de Crecimiento de la Población</td>
+<td>RH_2</td>
+</tr>
+<tr class="even">
+<td>Analfabetismo Absoluto</td>
+<td>RH_5</td>
+</tr>
+<tr class="odd">
+<td>Cobertura bruta en educación superior</td>
+<td>RH_7</td>
+</tr>
+<tr class="even">
+<td>Calidad de los colegios</td>
+<td>RH_9</td>
+</tr>
+<tr class="odd">
+<td>PIB per cápita</td>
+<td>FOR_59</td>
+</tr>
+<tr class="even">
+<td>NBI</td>
+<td>FOR_61</td>
+</tr>
+<tr class="odd">
+<td>Población Urbana sobre la Población Total</td>
+<td>FOR_62</td>
+</tr>
+<tr class="even">
+<td>Índice de Densidad Industrial</td>
+<td>FOR_63</td>
+</tr>
+<tr class="odd">
+<td>Índice de Especialización Industrial</td>
+<td>FOR_65</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-dos" class="level5">
+<h5 class="anchored" data-anchor-id="componente-dos">Componente DOS:</h5>
+<p>Para la componente dos son relevantes dos variables como se muestra en la tabla, estas pueden tener mayor sentido mas adelante cuando se haga la relación entre componentes pero si podemos decir que son contrarias, por ejemplo entre mas secuentros hay una menor relación entre alumno-profesor.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Relación alumno-profesor</td>
+<td>RH_8</td>
+</tr>
+<tr class="even">
+<td>Secuestros</td>
+<td>RH_16</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-tres" class="level5">
+<h5 class="anchored" data-anchor-id="componente-tres">Componente TRES:</h5>
+<p>En este componente tenemos que hay dos variables que son de caracter delictivo contra el crecimiento de PIB per capital, las cuales son contrarias, es decir que por ejemplo un menor crecimiento PIB per capital, hace que hayan mayores delitos contra la formación sexual y violencia intrafamiliar.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Delitos contra la formación sexual</td>
+<td>RH_13</td>
+</tr>
+<tr class="even">
+<td>Violencia Intrafamiliar</td>
+<td>RH_14</td>
+</tr>
+<tr class="odd">
+<td>Crecimiento PIB per cápita</td>
+<td>FOR_58</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-cuatro" class="level5">
+<h5 class="anchored" data-anchor-id="componente-cuatro">Componente CUATRO:</h5>
+<p>Esta componente estaria representada con la siguientes variables, Poblacion de la ciudad, secuestros y PIB per capital, en comparación con la cobertura bruta en primaria y secundaria, esto se puede ver de la siguiente forma, si la cobertura bruta en primaria y secundaria es mayor vemos que las varibles Poblacion de la ciudad, secuestros y PIB per capital tienden a ser bajas.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cobertura bruta en primaria y secundaria</td>
+<td>RH_6</td>
+</tr>
+<tr class="even">
+<td>Población de la ciudad</td>
+<td>RH_1</td>
+</tr>
+<tr class="odd">
+<td>Secuestros</td>
+<td>RH_16</td>
+</tr>
+<tr class="even">
+<td>PIB per capital</td>
+<td>FOR_59</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-cinco" class="level5">
+<h5 class="anchored" data-anchor-id="componente-cinco">Componente CINCO:</h5>
+<p>Esta componente estaria representada solamente con la siguiente variable.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tasa de Entrada Neta de Empresas</td>
+<td>FOR_60</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="análisis-de-los-circulos-de-correlación" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-los-circulos-de-correlación">Análisis de los circulos de correlación</h4>
+<p>Se dara la interpretación de las relaciones que podrian existir entre las componentes respecto a las variables del estudio, con esto se podrian hallar agrupaciones de variables y ademas dar interpretación de los ejes factoriales.</p>
+<section id="componente-uno-vs-componente-dos" class="level5">
+<h5 class="anchored" data-anchor-id="componente-uno-vs-componente-dos">Componente uno vs Componente dos</h5>
+<p>El grafíco muestra que hay un agrupamiento de variables en la parte derecha del circulo de correlación; esto nos dice que estas variables tienen una relación entre ellas, lo cual como antes se habia dicho que el eje 1 representa el desarrollo a un nivel social con un enfoque empresarial y el eje 2 representa la relación alumno profesor y los secuestros, es decir que al ver en mas detalle las variables el agrupamiento de variables en la parte derecha hace referencia que entre mas desarrollo social con enfoque empresarial, puede causar o es consecuencia de que la relación alumno-profesor sea buena. En caso contrario veriamos que entre menos desarrollo social, los secuestros serian muy relevantes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="componente-dos-vs-componente-tres" class="level5">
+<h5 class="anchored" data-anchor-id="componente-dos-vs-componente-tres">Componente dos vs Componente tres</h5>
+<p>El grafíco muestra que hay un agrupamiento de variables en la parte derecha del circulo de correlación esto nos dice que estas variables tienen una relación entre ellas, lo cual como antes se habia dicho que el eje 2 representa la relación alumno profesor y los secuestros y el eje 3 es de caracter delictivo contra el crecimiento de PIB per capital, es decir que las variables agrupadas en la derecha explican que entre mejor relación alumno profesor hay un mayor crecimiento de PIB per capital, en caso contrario entre mas bajo crecimiento del PIB per capital hace que hayaa mas criminalidad en el ambito de secuestros, violencia intrafamiliar y delitos contra la formación sexual.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="componente-tres-vs-componente-cuatro" class="level5">
+<h5 class="anchored" data-anchor-id="componente-tres-vs-componente-cuatro">Componente tres vs Componente cuatro</h5>
+<p>En esta relación de componentes vemos que las variables estan mas dispersas y que los vectores estan mas hacia el centro, es decir que no tienen buena correlación con el componente, pero si sabemos que hay algunas variables que son representativas a cada componente, como se puede ver en el circulo de correlación.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="componente-cuatro-vs-componente-cinco" class="level5">
+<h5 class="anchored" data-anchor-id="componente-cuatro-vs-componente-cinco">Componente cuatro vs Componente cinco</h5>
+<p>En el circulo de correlación vemos que las variables estan bastante distribuidas al rededor del centro y sus correlaciones son muy bajas, pero si sabemos que hay una variable que tiene buena correlación que es la Tasa de Entrada Neta de Empresas, la cual es una variable que no es representativa en las otras componentes pero si en la componente cinco, lo cual podria aportar información importante al estudio.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="análisis-para-las-ciudades" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-para-las-ciudades">Análisis para las ciudades</h3>
+<ol type="1">
+<li><p>Plano Factorial para la componente uno vs componente dos</p>
+<p>Vemos que las ciudades que tienen un buen desarrollo social, son Bogotá, Bucaramanga y medellin ha comparación con Riohacha que tiene un pesimo desarrollo social pero un mediamente una buena relación con Alumno profesor, ademas vemos que San Andres no tiene un buen desarrollo social y tambien vemos que tiene alta cantidad de secuestros.</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="2" type="1">
+<li><p>Plano Factorial para la componente dos vs componente tres</p>
+<p>Notamos que Riohacha y Medellin tienen mejor relación alumno profesor, lo cual permite un mayor crecimiento de PIB per capital, lo que es en caso contrario con San Andres entre mas bajo crecimiento del PIB per capital hace que haya mas criminalidad en el ambito de secuestros, violencia intrafamiliar y delitos contra la formación sexual. Un caso extraño es Villavivencio, ya que esta ciudad tiene un buena relación Alumno-profesor pero esto el nivel de delitos.</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p>Plano Factorial para la componente tres vs componente cuatro</p>
+<p>Notamos que hay tres ciudades destacadas, las cuales se les dara su respectivo análisis.</p>
+<ul>
+<li><p>Bogotá: Es un ciudad en la cual tiene un buen Crecimiento PIB per cápita y ademas tiene gran población, un índice de secuestros altos y un PIB per capital bueno.</p></li>
+<li><p>San Andres: Esta ciudad tiene un bajo crecimiento PIB per cápita y ademas tiene gran población, un índice de secuestros altos y un PIB per capital bueno.</p></li>
+<li><p>Villavicencio: Esta ciudad tiene el mas bajo Crecimiento PIB per cápita y el un índice de delitos alto.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="4" type="1">
+<li><p>Plano Factorial para la componente cuatro vs componente cinco</p>
+<p>Acá se hará análisis sobre la componente cinco que representa la Tasa de Entrada Neta de Empresas, notamos que hay dos ciudades que son representativas para este componente.</p></li>
+</ol>
+<ul>
+<li><p>Villavicencio: Vemos que las empresas en esta ciudad tienden a perder dinero despues de pagar los gastos operativos de la empresa.</p></li>
+<li><p>Sincelejo: Notamos que las empresas en esta ciudad tienden a tener ganancias.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="análisis-tomando-al-conjunto-de-variables-fortalezas-económicasfor-como-ilustrativas" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-tomando-al-conjunto-de-variables-fortalezas-económicasfor-como-ilustrativas">Análisis tomando al conjunto de variables Fortalezas económicas(FOR) como ilustrativas</h3>
+<p>Se realiza el análisis tomando el grupo de variables Fortalezas económicas como suplementarias para implementar el ACP, con esto se trata de encontrar el número de componentes optimos que representen la variabilidad de los datos.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Valores propios, porcentajes de varianza y de varianza acumulados</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">eigenvalue</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">percentage of variance</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">cumulative percentage of variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">comp 1</td>
+<td style="text-align: right;">3.571</td>
+<td style="text-align: right;">25.510</td>
+<td style="text-align: right;">25.510</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 2</td>
+<td style="text-align: right;">2.239</td>
+<td style="text-align: right;">15.993</td>
+<td style="text-align: right;">41.504</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 3</td>
+<td style="text-align: right;">2.072</td>
+<td style="text-align: right;">14.797</td>
+<td style="text-align: right;">56.301</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 4</td>
+<td style="text-align: right;">1.603</td>
+<td style="text-align: right;">11.448</td>
+<td style="text-align: right;">67.749</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 5</td>
+<td style="text-align: right;">1.258</td>
+<td style="text-align: right;">8.988</td>
+<td style="text-align: right;">76.737</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 6</td>
+<td style="text-align: right;">1.192</td>
+<td style="text-align: right;">8.513</td>
+<td style="text-align: right;">85.249</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 7</td>
+<td style="text-align: right;">0.771</td>
+<td style="text-align: right;">5.509</td>
+<td style="text-align: right;">90.758</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 8</td>
+<td style="text-align: right;">0.461</td>
+<td style="text-align: right;">3.296</td>
+<td style="text-align: right;">94.054</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 9</td>
+<td style="text-align: right;">0.328</td>
+<td style="text-align: right;">2.340</td>
+<td style="text-align: right;">96.394</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 10</td>
+<td style="text-align: right;">0.215</td>
+<td style="text-align: right;">1.538</td>
+<td style="text-align: right;">97.932</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 11</td>
+<td style="text-align: right;">0.129</td>
+<td style="text-align: right;">0.920</td>
+<td style="text-align: right;">98.852</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 12</td>
+<td style="text-align: right;">0.094</td>
+<td style="text-align: right;">0.673</td>
+<td style="text-align: right;">99.524</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 13</td>
+<td style="text-align: right;">0.054</td>
+<td style="text-align: right;">0.384</td>
+<td style="text-align: right;">99.909</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 14</td>
+<td style="text-align: right;">0.013</td>
+<td style="text-align: right;">0.091</td>
+<td style="text-align: right;">100.000</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Vemos que según los valores propios estos recogen el <span class="math inline">\(76.737 \%\)</span> de la varianza de los datos con cinco componentes, entonces se procede ha análizar si estos componentes son representativos.</p>
+<p>Ahora se mostrara, la tabla correspondiente a las correlaciones respecto a las componentes propuestas vemos que existen variables que tienen una correlacion buena, es decir que si son en forma positiva son mayores o iguales a <span class="math inline">\(0.6\)</span> o en el caso negativo que son menores o iguales a <span class="math inline">\(-0.6\)</span>. Con esto podemos definir que si las componentes representan la variabilidad de los datos y ademas ver las variables que son relevantes en el estudio.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Correlaciones, Contribuciones y Cos2</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF4</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CorF5</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF4</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">ContriF5</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF4</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CosF5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">RH_5</td>
+<td style="text-align: right;">0.904</td>
+<td style="text-align: right;">0.208</td>
+<td style="text-align: right;">-0.274</td>
+<td style="text-align: right;">-0.046</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">22.891</td>
+<td style="text-align: right;">1.939</td>
+<td style="text-align: right;">3.613</td>
+<td style="text-align: right;">0.129</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.818</td>
+<td style="text-align: right;">0.043</td>
+<td style="text-align: right;">0.075</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_2</td>
+<td style="text-align: right;">0.819</td>
+<td style="text-align: right;">0.195</td>
+<td style="text-align: right;">-0.106</td>
+<td style="text-align: right;">0.379</td>
+<td style="text-align: right;">0.193</td>
+<td style="text-align: right;">18.795</td>
+<td style="text-align: right;">1.690</td>
+<td style="text-align: right;">0.546</td>
+<td style="text-align: right;">8.958</td>
+<td style="text-align: right;">2.949</td>
+<td style="text-align: right;">0.671</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.144</td>
+<td style="text-align: right;">0.037</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_8</td>
+<td style="text-align: right;">0.794</td>
+<td style="text-align: right;">0.305</td>
+<td style="text-align: right;">0.262</td>
+<td style="text-align: right;">-0.086</td>
+<td style="text-align: right;">-0.244</td>
+<td style="text-align: right;">17.635</td>
+<td style="text-align: right;">4.152</td>
+<td style="text-align: right;">3.309</td>
+<td style="text-align: right;">0.465</td>
+<td style="text-align: right;">4.716</td>
+<td style="text-align: right;">0.630</td>
+<td style="text-align: right;">0.093</td>
+<td style="text-align: right;">0.069</td>
+<td style="text-align: right;">0.007</td>
+<td style="text-align: right;">0.059</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_12</td>
+<td style="text-align: right;">0.643</td>
+<td style="text-align: right;">0.190</td>
+<td style="text-align: right;">-0.220</td>
+<td style="text-align: right;">0.061</td>
+<td style="text-align: right;">0.620</td>
+<td style="text-align: right;">11.586</td>
+<td style="text-align: right;">1.620</td>
+<td style="text-align: right;">2.331</td>
+<td style="text-align: right;">0.230</td>
+<td style="text-align: right;">30.522</td>
+<td style="text-align: right;">0.414</td>
+<td style="text-align: right;">0.036</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.004</td>
+<td style="text-align: right;">0.384</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_13</td>
+<td style="text-align: right;">0.218</td>
+<td style="text-align: right;">-0.196</td>
+<td style="text-align: right;">0.768</td>
+<td style="text-align: right;">0.409</td>
+<td style="text-align: right;">0.239</td>
+<td style="text-align: right;">1.330</td>
+<td style="text-align: right;">1.719</td>
+<td style="text-align: right;">28.463</td>
+<td style="text-align: right;">10.425</td>
+<td style="text-align: right;">4.528</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;">0.590</td>
+<td style="text-align: right;">0.167</td>
+<td style="text-align: right;">0.057</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_6</td>
+<td style="text-align: right;">0.209</td>
+<td style="text-align: right;">0.303</td>
+<td style="text-align: right;">0.630</td>
+<td style="text-align: right;">-0.555</td>
+<td style="text-align: right;">-0.175</td>
+<td style="text-align: right;">1.218</td>
+<td style="text-align: right;">4.094</td>
+<td style="text-align: right;">19.158</td>
+<td style="text-align: right;">19.228</td>
+<td style="text-align: right;">2.424</td>
+<td style="text-align: right;">0.043</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.397</td>
+<td style="text-align: right;">0.308</td>
+<td style="text-align: right;">0.031</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_14</td>
+<td style="text-align: right;">0.018</td>
+<td style="text-align: right;">-0.235</td>
+<td style="text-align: right;">0.801</td>
+<td style="text-align: right;">0.302</td>
+<td style="text-align: right;">0.076</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">2.460</td>
+<td style="text-align: right;">30.950</td>
+<td style="text-align: right;">5.705</td>
+<td style="text-align: right;">0.462</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.055</td>
+<td style="text-align: right;">0.641</td>
+<td style="text-align: right;">0.091</td>
+<td style="text-align: right;">0.006</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_11</td>
+<td style="text-align: right;">-0.076</td>
+<td style="text-align: right;">0.410</td>
+<td style="text-align: right;">-0.283</td>
+<td style="text-align: right;">0.244</td>
+<td style="text-align: right;">0.039</td>
+<td style="text-align: right;">0.164</td>
+<td style="text-align: right;">7.519</td>
+<td style="text-align: right;">3.878</td>
+<td style="text-align: right;">3.728</td>
+<td style="text-align: right;">0.123</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.168</td>
+<td style="text-align: right;">0.080</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_15</td>
+<td style="text-align: right;">-0.101</td>
+<td style="text-align: right;">-0.045</td>
+<td style="text-align: right;">0.195</td>
+<td style="text-align: right;">-0.339</td>
+<td style="text-align: right;">0.688</td>
+<td style="text-align: right;">0.286</td>
+<td style="text-align: right;">0.088</td>
+<td style="text-align: right;">1.827</td>
+<td style="text-align: right;">7.160</td>
+<td style="text-align: right;">37.586</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.002</td>
+<td style="text-align: right;">0.038</td>
+<td style="text-align: right;">0.115</td>
+<td style="text-align: right;">0.473</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_16</td>
+<td style="text-align: right;">-0.206</td>
+<td style="text-align: right;">-0.632</td>
+<td style="text-align: right;">-0.238</td>
+<td style="text-align: right;">0.536</td>
+<td style="text-align: right;">0.058</td>
+<td style="text-align: right;">1.193</td>
+<td style="text-align: right;">17.833</td>
+<td style="text-align: right;">2.725</td>
+<td style="text-align: right;">17.919</td>
+<td style="text-align: right;">0.264</td>
+<td style="text-align: right;">0.043</td>
+<td style="text-align: right;">0.399</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">0.287</td>
+<td style="text-align: right;">0.003</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_10</td>
+<td style="text-align: right;">-0.213</td>
+<td style="text-align: right;">-0.301</td>
+<td style="text-align: right;">-0.185</td>
+<td style="text-align: right;">-0.554</td>
+<td style="text-align: right;">0.363</td>
+<td style="text-align: right;">1.268</td>
+<td style="text-align: right;">4.056</td>
+<td style="text-align: right;">1.645</td>
+<td style="text-align: right;">19.125</td>
+<td style="text-align: right;">10.480</td>
+<td style="text-align: right;">0.045</td>
+<td style="text-align: right;">0.091</td>
+<td style="text-align: right;">0.034</td>
+<td style="text-align: right;">0.307</td>
+<td style="text-align: right;">0.132</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_1</td>
+<td style="text-align: right;">-0.357</td>
+<td style="text-align: right;">0.709</td>
+<td style="text-align: right;">-0.037</td>
+<td style="text-align: right;">0.291</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">3.567</td>
+<td style="text-align: right;">22.437</td>
+<td style="text-align: right;">0.066</td>
+<td style="text-align: right;">5.271</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.127</td>
+<td style="text-align: right;">0.502</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RH_7</td>
+<td style="text-align: right;">-0.516</td>
+<td style="text-align: right;">0.718</td>
+<td style="text-align: right;">0.106</td>
+<td style="text-align: right;">0.091</td>
+<td style="text-align: right;">0.134</td>
+<td style="text-align: right;">7.456</td>
+<td style="text-align: right;">23.019</td>
+<td style="text-align: right;">0.540</td>
+<td style="text-align: right;">0.515</td>
+<td style="text-align: right;">1.437</td>
+<td style="text-align: right;">0.266</td>
+<td style="text-align: right;">0.515</td>
+<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.008</td>
+<td style="text-align: right;">0.018</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RH_9</td>
+<td style="text-align: right;">-0.671</td>
+<td style="text-align: right;">0.406</td>
+<td style="text-align: right;">0.140</td>
+<td style="text-align: right;">0.135</td>
+<td style="text-align: right;">0.238</td>
+<td style="text-align: right;">12.602</td>
+<td style="text-align: right;">7.374</td>
+<td style="text-align: right;">0.951</td>
+<td style="text-align: right;">1.142</td>
+<td style="text-align: right;">4.496</td>
+<td style="text-align: right;">0.450</td>
+<td style="text-align: right;">0.165</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.018</td>
+<td style="text-align: right;">0.057</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Al realizar el análisis de las cinco componentes podemos escoger las variables que aportan información a cada componente que tiene la siguiente agrupación.</p>
+<section id="componente-uno-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-uno-1">Componente UNO:</h5>
+<p>Este grupo de variables hacer referencia ha una forma de medir el desarrollo educativo.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tasa de Crecimiento de la Población</td>
+<td>RH_2</td>
+</tr>
+<tr class="even">
+<td>Analfabetismo Absoluto</td>
+<td>RH_5</td>
+</tr>
+<tr class="odd">
+<td>Relación alumno-profesor</td>
+<td>RH_8</td>
+</tr>
+<tr class="even">
+<td>Calidad de los colegios</td>
+<td>RH_9*</td>
+</tr>
+<tr class="odd">
+<td>Mortalidad Infantil</td>
+<td>RH_12</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-dos-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-dos-1">Componente DOS:</h5>
+<p>Esta componente puede hacer referencia a que una buena cobertura en la educación superior esto reduce los secuestros.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Población de la ciudad</td>
+<td>RH_1</td>
+</tr>
+<tr class="even">
+<td>Cobertura bruta en educación superior</td>
+<td>RH_7</td>
+</tr>
+<tr class="odd">
+<td>Secuestros</td>
+<td>RH_16*</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-tres-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-tres-1">Componente TRES:</h5>
+<p>Esta componente esta representada por tres variables de las cuales son de caracter delictivas y una de educación.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cobertura bruta en primaria y secundaria</td>
+<td>RH_6</td>
+</tr>
+<tr class="even">
+<td>Delitos contra la formación sexual</td>
+<td>RH_13</td>
+</tr>
+<tr class="odd">
+<td>Violencia Intrafamiliar</td>
+<td>RH_14</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-cuatro-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-cuatro-1">Componente CUATRO:</h5>
+<p>Vemos que esta componente relaciona una variable educativa con una de trabajo, es decir que al tener buena cobertura en primaria y secundaria, podria garantizar la capacidad para eñ trabajo.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cobertura bruta en primaria y secundaria</td>
+<td>RH_6</td>
+</tr>
+<tr class="even">
+<td>Capacitación para el trabajo</td>
+<td>RH_10</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="componente-cinco-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-cinco-1">Componente CINCO:</h5>
+<p>Esta componente hace referencia a la mortalidad.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Caracteristica de la variable</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mortalidad Infantil</td>
+<td>RH_12</td>
+</tr>
+<tr class="even">
+<td>Homicidios</td>
+<td>RH_15</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="análisis-de-los-circulos-de-correlación-1" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-los-circulos-de-correlación-1">Análisis de los circulos de correlación</h4>
+<p>Se dara la interpretación de las relaciones que podrian existir entre las componentes respecto a las variables del estudio y suplementarias, con esto se podrian hallar agrupaciones de variables y ademas dar interpretación de los ejes factoriales</p>
+<section id="componente-uno-vs-componente-dos-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-uno-vs-componente-dos-1">Componente uno vs Componente dos</h5>
+<p>En el circulo de correlación se ve claramente las variables suplementarias estan acumaladas hacia la izquierda, esto quiere decir que las fortalezas económicas, estan relacionadas con el desarrollo educativo. Tambien vemos que la variable suplementaria Necesidades básicas insatisfechas (For_61) es una consecuencia de un bajo desarrollo educativo.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="componente-dos-vs-componente-tres-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-dos-vs-componente-tres-1">Componente dos vs Componente tres</h5>
+<p>Las variables sumplemenatrias vemos que estan acumuladas hacia la izquierda, esto quiere decir que la Fortalezas economicas, estan bien representadas por las componentes dos y tres que tienen un caracter educativo, es decir que las variables suplementarias estan muy bien relacionadas con lo educativo. Pero vemos que en la componente tres tambien explica lo delictivo, lo que hace pensar que entre mas fortaleza economica esto puede estar relacionado directamento con lo delictivo.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="componente-tres-vs-componente-cuatro-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-tres-vs-componente-cuatro-1">Componente tres vs Componente cuatro</h5>
+<p>En el circulo de correlación vemos que las variables suplementarias estan distribuidas alrededor del centro y ademas no presentan un buena correlación respecto a los ejes. podemos decir que no aportan información al estudio.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="componente-cuatro-vs-componente-cinco-1" class="level5">
+<h5 class="anchored" data-anchor-id="componente-cuatro-vs-componente-cinco-1">Componente cuatro vs Componente cinco</h5>
+<p>Las variables suplementarias estan en su mayoria ubicadas en la parte izquierda del grafíco, esto se puede interpretar que la capacitación del trabajo y cobertura en la educación primaria y secundaria influyen en la fortaleza economica. Tambien notamos que en la componente cinco estas variables suplementarias no estan bien represntadas.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="análisis-para-las-ciudades-con-las-variables-suplementarias" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-para-las-ciudades-con-las-variables-suplementarias">Análisis para las ciudades con las variables suplementarias</h3>
+<ol type="1">
+<li><p>Plano Factorial para la componente uno vs componente dos</p>
+<p>En el plano factorial, se ve claramente que las variables suplementarias estan agrupadas hacia la izquierda, es decir que las ciudades que esten cerca a esta agrupación su Fortalezas economicas son representativa, vemos que las ciudades que resaltan son las siguientes:</p>
+<ul>
+<li><p>Bogotá: Tiene un buen desarrollo educativo a comparación de las demas ciudades y una cobertura en educación superior satisfactoria.</p></li>
+<li><p>Riohacha: Tiene el peor desarrollo educativo y ademas es una ciudad que tiene una calidad delictiva alta.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="2" type="1">
+<li><p>Plano Factorial para la componente dos vs componente tres</p>
+<p>En el plano factorial, vemos que hay tres ciudades que son represntativas:</p>
+<ul>
+<li><p>San Andres: Esta ciudad tiene un nivel delictivo alto y un desarrollo en educación bajo</p></li>
+<li><p>Villavicencio: Esta ciudad tiene un nivel delictivo alto y medianamente un desarrollo educativo medio.</p></li>
+<li><p>Bogotá: El nivel delectivo es bajo y ademas tiene un dearrollo educativo alto.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p>Plano Factorial para la componente tres vs componente cuatro</p>
+<p>En este plano vemos que hay dos ciudades que son relevantes para su análisis:</p>
+<ul>
+<li><p>San andrés: Tenemos que esta ciudad tiene una baja cobertura en primaria y secundaria y ademas una alta delictividad en la ciudad.</p></li>
+<li><p>Villavicencio: Tiene una alta cobertura en primaria y un alto nivel de delitos.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="4" type="1">
+<li><p>Plano Factorial para la componente cuatro vs componente cinco</p>
+<p>Vemos que Rioacha tiene una gran cantidad de muertes a comparación de Sincelejo y Monteria son bajos.</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="acp-tomando-las-ciudades-como-variables" class="level3">
+<h3 class="anchored" data-anchor-id="acp-tomando-las-ciudades-como-variables">ACP tomando las ciudades como variables</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Valores propios, porcentajes de varianza y de varianza acumulados</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">eigenvalue</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">percentage of variance</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">cumulative percentage of variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">comp 1</td>
+<td style="text-align: right;">2.562</td>
+<td style="text-align: right;">51.233</td>
+<td style="text-align: right;">51.233</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 2</td>
+<td style="text-align: right;">0.816</td>
+<td style="text-align: right;">16.314</td>
+<td style="text-align: right;">67.547</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 3</td>
+<td style="text-align: right;">0.724</td>
+<td style="text-align: right;">14.475</td>
+<td style="text-align: right;">82.023</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">comp 4</td>
+<td style="text-align: right;">0.591</td>
+<td style="text-align: right;">11.830</td>
+<td style="text-align: right;">93.852</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">comp 5</td>
+<td style="text-align: right;">0.307</td>
+<td style="text-align: right;">6.148</td>
+<td style="text-align: right;">100.000</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>Veamos que en los dos primeros factores se concentra el mayor porcentaje de varianza por lo tanto nos vamos a centrar en estos.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Correlaciones, Contribuciones y Cos2</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Factor 1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Factor 2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Factor 1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Factor 2</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Factor 1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Factor 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Barranquilla</td>
+<td style="text-align: right;">0.834</td>
+<td style="text-align: right;">-0.248</td>
+<td style="text-align: right;">27.126</td>
+<td style="text-align: right;">7.533</td>
+<td style="text-align: right;">0.695</td>
+<td style="text-align: right;">0.061</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bogotá..D.C.</td>
+<td style="text-align: right;">0.679</td>
+<td style="text-align: right;">0.311</td>
+<td style="text-align: right;">17.983</td>
+<td style="text-align: right;">11.866</td>
+<td style="text-align: right;">0.461</td>
+<td style="text-align: right;">0.097</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bucaramanga</td>
+<td style="text-align: right;">0.641</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;">16.021</td>
+<td style="text-align: right;">0.036</td>
+<td style="text-align: right;">0.410</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cali</td>
+<td style="text-align: right;">0.670</td>
+<td style="text-align: right;">0.590</td>
+<td style="text-align: right;">17.538</td>
+<td style="text-align: right;">42.679</td>
+<td style="text-align: right;">0.449</td>
+<td style="text-align: right;">0.348</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Medellín</td>
+<td style="text-align: right;">0.739</td>
+<td style="text-align: right;">-0.556</td>
+<td style="text-align: right;">21.332</td>
+<td style="text-align: right;">37.886</td>
+<td style="text-align: right;">0.546</td>
+<td style="text-align: right;">0.309</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 15 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="análisis-para-las-ciudades-con-las-variables-suplementarias-1" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-para-las-ciudades-con-las-variables-suplementarias-1">Análisis para las ciudades con las variables suplementarias</h3>
+<ol type="1">
+<li><p>Plano Factorial para la componente uno vs componente dos</p>
+<p>En el plano factorial, se ve claramente que las variables suplementarias estan agrupadas hacia la izquierda, es decir que las ciudades que esten cerca a esta agrupación su Fortalezas economicas son representativa, vemos que las ciudades que resaltan son las siguientes:</p>
+<ul>
+<li><p>Bogotá: Tiene un buen desarrollo educativo a comparación de las demas ciudades y una cobertura en educación superior satisfactoria.</p></li>
+<li><p>Riohacha: Tiene el peor desarrollo educativo y ademas es una ciudad que tiene una calidad delictiva alta.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="2" type="1">
+<li><p>Plano Factorial para la componente dos vs componente tres</p>
+<p>En el plano factorial, vemos que hay tres ciudades que son represntativas:</p>
+<ul>
+<li><p>San Andres: Esta ciudad tiene un nivel delictivo alto y un desarrollo en educación bajo</p></li>
+<li><p>Villavicencio: Esta ciudad tiene un nivel delictivo alto y medianamente un desarrollo educativo medio.</p></li>
+<li><p>Bogotá: El nivel delectivo es bajo y ademas tiene un dearrollo educativo alto.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p>Plano Factorial para la componente tres vs componente cuatro</p>
+<p>En este plano vemos que hay dos ciudades que son relevantes para su análisis:</p>
+<ul>
+<li><p>San andrés: Tenemos que esta ciudad tiene una baja cobertura en primaria y secundaria y ademas una alta delictividad en la ciudad.</p></li>
+<li><p>Villavicencio: Tiene una alta cobertura en primaria y un alto nivel de delitos.</p></li>
+</ul></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="4" type="1">
+<li><p>Plano Factorial para la componente cuatro vs componente cinco</p>
+<p>Vemos que Rioacha tiene una gran cantidad de muertes a comparación de Sincelejo y Monteria son bajos.</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="TallerTres_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
