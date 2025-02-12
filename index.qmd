@@ -1,0 +1,11 @@
+---
+title: "Estadística Descriptiva multivariada"
+---
+
+### Integrantes del grupo.
+
+-   Cesar Fabian Tiguaque Castellanos ( ctiguaquec\@unal.edu.co )
+-   Juan Andrés Godoy Reyes (jgodoy\@unal.edu.co)
+-   Miguel Alfonso Arteaga López (Marteagal\@unal.edu.co)
+-   Cristel Scarlet Marín Herrera (crmarin\@unal.edu.co)
+-   Isabella Suárez Artunduaga (isuareza@unal.edu.co)
