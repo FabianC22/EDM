@@ -1,0 +1,529 @@
+---
+title: "Taller Cuatro"
+format: html
+editor: visual
+---
+
+```{r, message=FALSE}
+library(readxl)
+library(dplyr)
+library(gmodels)
+library(tidyr)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(FactoMineR)
+library(FactoMineR)
+library(factoextra)
+library(gridExtra)
+
+
+```
+
+# Análisis de correspondencias simples (ACS)
+
+## Punto 1 y 3
+
+Con la metodología del ejemplo 1.8.1 hacer un ACS para la tabla de contingencias p17b×p21 con las preguntas“p17 b”(en las filas) sobre la facilidad para cumplir la ley y la preferencia por hacer acuerdos p21. Identificar patrones o tendencias si los hay y comentar los resultados.
+
+```{r}
+df <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/ECC_completa_19426.csv", comment.char="#")
+
+
+df_mexico <- df %>% filter(ciudad2 == "Mexico DF")
+
+
+
+tabla_mexico <- table(df_mexico$p17_b, df_mexico$p21, useNA = "ifany")
+tabla_con_totales <- addmargins(tabla_mexico)
+print(tabla_con_totales)
+```
+
+```{r}
+#Tabla de perfiles fila 
+perfilesF <- as.data.frame.matrix(tabla_mexico)
+perf_fil <- cbind(perfilesF, TotFil = rowSums(tabla_mexico))
+perfilas <- round(perf_fil / perf_fil$TotFil, 2)
+#print(perfilas)
+
+# Para Markdown
+kable(perfilas, format = "markdown", caption =
+        "Tabla de Perfiles Fila: p17_b vs p21") %>%
+  kable_styling(full_width = FALSE, position = "center")
+
+```
+
+```{r}
+#Gráfico
+perfilas_long <- perfilas %>%
+  select(-TotFil) %>%
+  mutate(p17_b = rownames(perfilas)) %>%
+  pivot_longer(-p17_b, names_to = "p17", values_to = "Proporcion")
+ggplot(perfilas_long, aes(x=p17, y = Proporcion, fill = p17)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = round(Proporcion, 2)), 
+            vjust = -0.5, size = 3.5) +  
+  facet_wrap(~p17_b, scales = "free_x") +  
+  theme_minimal() +
+  labs(title = "Perfiles Fila: p17_b vs p21 (Solo México DF)",
+       y = "Proporción",
+       fill = "Categoría p21") +  
+  theme(axis.text.x = element_blank(),  
+        axis.ticks.x = element_blank(),  
+        strip.text = element_text(size = 12, face = "bold"),  
+        legend.position = "right") +  
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))  
+
+
+```
+
+```{r}
+#Tabla de perfiles COLUMNA
+perfilesC <- as.data.frame.matrix(tabla_mexico)
+
+TotCol <- colSums(perfilesC)  
+perf_col <- rbind(perfilesC, TotCol) 
+perfilas_col <- round(sweep(perfilesC, 2, TotCol, FUN = "/"), 2) 
+perfilas_col <- rbind(perfilas_col, TotCol = rep(1, length(TotCol)))  # Totales deben ser 1
+print(perfilas_col)
+
+```
+
+```{r}
+#GRÁFICO
+perfilas_col_long <- perfilas_col %>%
+  mutate(p21 = rownames(perfilas_col)) %>%
+  pivot_longer(-p21, names_to = "p17_b", values_to = "Proporcion")
+
+ggplot(perfilas_col_long, aes(x = p21, y = Proporcion, fill = p21)) +
+  geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  geom_text(aes(label = round(Proporcion, 2)), vjust = -0.5, size = 3.5) +  # Agrega etiquetas
+  facet_wrap(~p17_b) +
+  scale_fill_manual(values = c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02")) + # Ahora hay 6 colores
+  theme_minimal() +
+  labs(title = "Perfiles Columna: p21 vs p17_b",
+       x = "p17_b",  # Cambia la etiqueta del eje X
+       y = "Proporción") +
+  theme(axis.text.x = element_blank(),  
+        axis.ticks.x = element_blank(), 
+        legend.position = "bottom")
+```
+
+```{r}
+
+preg17x21<-CA(as.data.frame.matrix(tabla_mexico), graph = F)
+  
+
+```
+
+```{r}
+# Obtener coordenadas, contribuciones y cosenos cuadrados de las filas
+cor3R <- round(preg17x21$row$coord[,1:2], 2)
+orden_correcto <- c("p17b_FACL=1_n", "p17b_FACL=2_cn", "p17b_FACL=3_cs", "p17b_FACL=4_s", "NA")
+con3R <- round(preg17x21$row$contrib[,1:2], 2) 
+colnames(con3R) <- c("Cont_Factor1", "Cont_Factor2")
+rownames(con3R) <- NULL 
+cos3R <- round(preg17x21$row$cos2[,1:2], 2)
+colnames(cos3R) <- c("Cos2_Factor1", "Cos2_Factor2")
+rownames(cos3R) <- NULL
+# Imprimir en formato tabla en la consola
+print(cbind(cor3R, con3R, cos3R))
+
+```
+
+```{r}
+
+# Graficar los perfiles fila
+plotfil <- fviz_ca_row(preg17x21, title = "Análisis por filas: p17b vs p21")
+coord_df <- as.data.frame(preg17x21$row$coord)
+coord_df$labels <- rownames(preg17x21$row$coord)
+colnames(coord_df) <- make.names(colnames(coord_df))
+
+```
+
+```{r}
+# Reemplazar valores NA con la media de la dimensión respectiva
+coord_df$Dim.1[is.na(coord_df$Dim.1)] <- mean(coord_df$Dim.1, na.rm = TRUE)
+coord_df$Dim.2[is.na(coord_df$Dim.2)] <- mean(coord_df$Dim.2, na.rm = TRUE)
+
+```
+
+```{r}
+# Definir el orden correcto de los puntos (incluyendo NA)
+# Definir el orden correcto, incluyendo "NA" como categoría válida
+orden_correcto <- c("p17b_FACL=1_n", "p17b_FACL=2_cn", "p17b_FACL=3_cs", "p17b_FACL=4_s", "NA")
+
+# Filtrar y ordenar los puntos en la secuencia deseada
+puntos_a_unir <- coord_df[coord_df$labels %in% orden_correcto, ]
+
+# Asegurar que los puntos están en el orden correcto
+puntos_a_unir <- puntos_a_unir[match(orden_correcto, puntos_a_unir$labels), ]
+
+```
+
+```{r}
+# Graficar con la línea roja punteada
+plotfil + geom_path(data = puntos_a_unir, aes(x = Dim.1, y = Dim.2), 
+            color = "red", linetype = "dashed", size = 1)
+
+
+```
+
+```{r}
+
+# Obtener coordenadas, contribuciones y cosenos cuadrados de las COLUMNAS
+
+cor_col <- round(preg17x21$col$coord[, 1:2], 2)
+con_col <- round(preg17x21$col$contrib[, 1:2], 2)
+cos_col <- round(preg17x21$col$cos2[, 1:2], 2)
+colnames(cor_col) <- c("Coord_Factor1", "Coord_Factor2")
+colnames(con_col) <- c("Contr_Factor1", "Contr_Factor2")
+colnames(cos_col) <- c("Cos2_Factor1", "Cos2_Factor2")
+tabla_col <- cbind(cor_col, con_col, cos_col)
+print(tabla_col)
+
+```
+
+```{r}
+filas_validas <- !is.na(rownames(preg17x21$col$coord)) & rownames(preg17x21$col$coord) != "SinNombre"
+
+# Aplicar el filtro SOLO si las dimensiones coinciden
+if (length(filas_validas) > 0 && nrow(preg17x21$col$coord) == nrow(preg17x21$col$contrib) && 
+    nrow(preg17x21$col$coord) == nrow(preg17x21$col$cos2)) {
+  
+  preg17x21$col$coord <- preg17x21$col$coord[filas_validas, , drop = FALSE]
+  preg17x21$col$contrib <- preg17x21$col$contrib[filas_validas, , drop = FALSE]
+  preg17x21$col$cos2 <- preg17x21$col$cos2[filas_validas, , drop = FALSE]
+}
+
+```
+
+```{r}
+# Volver a generar la gráfica asegurando que el objeto se crea correctamente
+plotcol <- fviz_ca_col(preg17x21, title = "Análisis por columnas: p17b vs p21", label = "none")
+
+
+```
+
+```{r}
+# Extraer coordenadas de los puntos de las columnas
+coord_col_df <- as.data.frame(preg17x21$col$coord)
+coord_col_df$labels <- rownames(preg17x21$col$coord)
+
+# Renombrar columnas para evitar problemas con espacios
+colnames(coord_col_df) <- make.names(colnames(coord_col_df))
+
+# Filtrar para eliminar filas con NA en las coordenadas o en los nombres
+coord_col_df <- coord_col_df[complete.cases(coord_col_df[, c("Dim.1", "Dim.2")]), ]
+coord_col_df <- coord_col_df[!coord_col_df$labels %in% c("NA", "N.A"), ]
+
+# Definir el orden correcto de los puntos
+orden_correcto_col <- c("p21_HACACU=1_n", "p21_HACACU=2_cn", "p21_HACACU=3_cs", "p21_HACACU=4_s")
+
+# Filtrar y ordenar los puntos en la secuencia deseada
+puntos_col_unir <- coord_col_df[coord_col_df$labels %in% orden_correcto_col, ]
+puntos_col_unir <- puntos_col_unir[match(orden_correcto_col, puntos_col_unir$labels), ]
+
+```
+
+```{r}
+# Graficar con nombres en azul y línea punteada roja
+plotcol +
+  geom_text(data = coord_col_df, aes(x = Dim.1, y = Dim.2, label = labels), 
+            color = "blue", vjust = -0.5, size = 3) +  # Nombres en azul sin sobreposición
+  geom_path(data = puntos_col_unir, aes(x = Dim.1, y = Dim.2), 
+            color = "red", linetype = "dashed", size = 1) +  # Línea roja punteada
+  coord_cartesian(xlim = range(coord_col_df$Dim.1, na.rm = TRUE),
+                  ylim = range(coord_col_df$Dim.2, na.rm = TRUE))
+
+
+```
+
+```{r}
+
+
+#Relaciones entre filas y columnas
+
+# Cargar librerías necesarias
+require(factoextra)
+
+# Generar biplot de correspondencias entre las modalidades de ambas preguntas
+biplot <- fviz_ca_biplot(
+  preg17x21,  # Reemplaza con el objeto correcto de tu análisis
+  title = "Relaciones simultáneas entre las modalidades de p17b y p21",
+  label = "all",  # Etiquetas para filas y columnas
+  col.row = "blue",  # Filas en azul
+  col.col = "red",   # Columnas en rojo
+  repel = TRUE       # Evita superposición de etiquetas
+)
+```
+
+```{r}
+# Ajustar límites del eje X si es necesario
+xlim_values <- c(-1.2, 0.8)
+
+# Agregar límites y mostrar el gráfico
+biplot + coord_cartesian(xlim = xlim_values)
+
+
+```
+
+## Punto 2
+
+Construir la tabla de contingencias *p17_b*×*ciudad* excluyendo la ciudad que le correspondió al grupo y las ciudades de Asunción y Montevideo. Yuxtaponerla a la tabla *p17_b* × *p21* del ejercicio 1 y utilizarla como variable suplementaria para averiguar si se puede identificar algún patrón o tendencia en la facilidad para cumplir la ley en las ciudades suplementarias con respecto a las tendencias de la ciudad que le correspondió al grupo.
+
+```{r}
+#| warning: false
+
+library(readxl)
+library(FactoMineR)
+library(kableExtra)
+library(sqldf)
+library(ggplot2)
+library(factoextra)
+
+
+Encuestas <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/ECC_completa_19426.csv", comment.char="#")
+
+Encuestas <- as.data.frame(Encuestas)
+Encuestas <- sqldf("select ciudad2, p17_b, p21
+                            from Encuestas
+                            where ciudad2 in ('Quito', 'Belo Horizonte', 'Caracas', 'La Paz', 'Bogota', 'Medellin', 'Monterrey')")
+
+TablaPreguntas <- table(Encuestas$p17_b, Encuestas$p21)
+TablaCiudades <- table(Encuestas$ciudad2, Encuestas$p21)
+
+TablaContingencia <- rbind(TablaPreguntas, TablaCiudades)
+
+rownames(TablaContingencia) <- c("17b-Nunca", "17b-Casi Nunca", "17b-Casi siempre", "17b-Siempre", "Belo Horizonte", "Bogota", "Caracas", "La Paz", "Medellin", "Monterrey", "Quito")
+colnames(TablaContingencia) <- c("21-Nunca", "21-Casi Nunca", "21-Casi siempre", "21-Siempre")
+
+TablaContingencia
+```
+
+### Tabla de varianza y valores propios
+
+```{r}
+
+ACSCiudades <- CA(TablaContingencia, graph = F, row.sup = c(5:11))
+
+kable(round(ACSCiudades$eig,4), format = "html", booktabs = T, align = 'c')%>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+```
+
+### Tabla de coordenadas de las filas
+
+```{r}
+
+kable(round(ACSCiudades$row$coord,4), format = "html", booktabs = T, align = 'c',
+      col.names = c("Factor 1", "Factor 2", "Factor 3")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+```
+
+### Tabla de cosenos de las filas
+
+```{r}
+
+kable(round(ACSCiudades$row$cos2,4), format = "html", booktabs = T, align = 'c',
+      col.names = c("Factor 1", "Factor 2", "Factor 3")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+```
+
+### Tabla de contribuciones de las filas
+
+```{r}
+
+kable(round(ACSCiudades$row$contrib,4), format = "html", booktabs = T, align = 'c',
+      col.names = c("Factor 1", "Factor 2", "Factor 3")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position"))
+```
+
+### Tabla de coordenadas de las columnas
+
+```{r}
+
+kable(round(ACSCiudades$col$coord,4), format = "html", booktabs = T, align = 'c',
+      col.names = c("Factor 1", "Factor 2", "Factor 3")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+```
+
+### Tabla de cosenos de las columnas
+
+```{r}
+
+kable(round(ACSCiudades$col$cos2,4), format = "html", booktabs = T, align = 'c',
+      col.names = c("Factor 1", "Factor 2", "Factor 3")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+```
+
+### Tabla de contribuciones de las columnas
+
+```{r}
+
+kable(round(ACSCiudades$col$contrib,4), format = "html", booktabs = T, align = 'c',
+      col.names = c("Factor 1", "Factor 2", "Factor 3")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", "hold_position")) 
+```
+
+### Gráfico
+
+```{r}
+
+fviz_ca_biplot(ACSCiudades, 
+               col.row = "red",
+               col.col = "blue3",
+               col.row.sup = "purple",
+               title = "ACS con ciudades suplementarias", 
+               xlab = "Factor 1 (85.08%)", 
+               ylab = "Factor 2 (13.77%)",
+               repel = TRUE)
+```
+
+# Punto 4
+
+### Seleccionar el subconjunto de datos
+
+```{r}
+ECC_completa_19426<-read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/ECC_completa_19426.csv", comment.char="#")
+
+
+Mexico <- ECC_completa_19426[1:2500,]
+
+p17xp21 <- table(Mexico$p17_b, Mexico$p21)
+
+preg17x21 <-CA(as.data.frame.matrix(p17xp21), graph = F)
+```
+
+### Crear la tabla de contingencia
+
+```{r}
+Ciudades <- table(ECC_completa_19426$ciudad2, ECC_completa_19426$p21)
+
+Ciudadespreguntas <- rbind(p17xp21, Ciudades)
+
+colnames(Ciudadespreguntas) <- c("Siempre", "Casi siempre", "Nunca", "Casi nunca")
+
+rownames(Ciudadespreguntas)[1:4] <- c("Nunca", "Casi nunca", "Casi siempre", "Siempre")
+
+```
+
+```{r}
+kable(Ciudadespreguntas, format = "markdown", booktabs = TRUE,
+      caption = "Preguntas activas con ciudades como variable suplementaria",
+      label = "prSuplementaria") %>%
+  kable_styling(latex_options = c("striped", "scale_down", "hold_position"))
+```
+
+Como podemos evidenciar La Paz y Bogotá siempre hacen acuerdos, luego tenemos a Mexico DF y Bogota que casi siempre hacen acuerdos, seguimos con Bogotá y Monterrey que nunca hacen acuerdos por último, Bogotá y Medellin que casi nunca hacen acuerdos.
+
+```{r}
+CiudadesIlustrativas = CA(Ciudadespreguntas, row.sup = c(5:10,12:14))
+summary(CiudadesIlustrativas)
+```
+
+Vemos como proyectamos las ciudades sobre los factores producidos por la tabla de contingencia de las preguntas actuar conforme a la ley y hacer acuerdos o tratos entre sí, donde tenemos a la ciudad de Mexico DF como la ciudad activa y las demás suplementarias, obsevemos como se repite el "Nunca" y el "Casi siempre" para hacer acuerdos o tratos entre sí, como los que se encuentran más cerca del centro, por otro lado, tenemos el "Casi siempre" y el "Siempre" para actuar conforme a la ley más cerca del centro.
+
+La varianza en las dos primeras dimensiones avarcan aproximadamente el 98 porciento, por lo tanto por eso tomamos los dos primeros factores, en las filas (Actuar conforme a la ley) vemos como en el primer factor Casi nunca y Siempre son los valores más altos tanto en coordenadas, contribución y en los cosenos cuadrados.En el segundo factor nunca y casi nunca son los más "altos" en coordenadas, también nunca y casi siempre de contribuciones, por último, Nunca y Mexico DF en cosenos cuadrados.
+
+Por otro lado, vemos con las columna (Hacer acuerdos o tratos entre sí) en el primer factor como Casi nunca y Casi siempre son los más "altos" en coordinadas, contribuciones y cosenos cuadrados.En el segundo factor Siempre y Nunca que también son las mejores en coordinadas, contribuciones y cosenos cuadrados.
+
+Por último, veamos que las variables suplementarias de ciudades no tienen varizanza por ser suplementarias y no aportan, en el primer componente vemos a Bogotá y Medellin como los más altos y Caracas como el más bajo en coordenadas, mientras Bogotá y Belo Horizonte como más altos y Caracas nuevamente en cosenos cuadrados.En el segundo componente tenemos La Paz y Caracas como los más altos y Medellin como el más bajo en coordenadas, mientras Montevideo y Quito como más altos y Medellin nuevamente en cosenos cuadrados.
+
+```{r}
+CiudadesIlustrativasa <- CA(as.data.frame.matrix(Ciudadespreguntas))
+```
+
+# Punto 5
+
+```{r}
+library(sqldf)
+Encuestas <-  read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/ECC_completa_19426.csv", comment.char="#")
+
+
+Encuestas <- as.data.frame(Encuestas)
+Encuestas <- sqldf("select p30, ciudad2
+                   from Encuestas")
+
+```
+
+```{r}
+TablaContingencia <- table(Encuestas$p30, Encuestas$ciudad2)
+TablaContingencia
+rownames(TablaContingencia) <- c("Menos segura", "Igual", "Más segura")
+
+```
+
+```{r}
+ACS <- CA(TablaContingencia, graph = F)
+```
+
+```{r, message=FALSE}
+p <- fviz_ca_biplot(ACS, 
+                    col.row = "red",
+                    col.col = "blue3",
+                    repel = TRUE,
+                    title = "Seguridad Ciudadana: Perspectivas en diferentes ciudades")
+
+p + theme(
+  plot.title = element_text(hjust = 0.5),  
+  panel.border = element_rect(color = "black", fill = NA, size = 1)  
+)
+
+```
+
+Los habitantes de ciudades como Bogotá, Quito, Monterrey, Asunción y Caracas han reportado un aumento en la percepción de inseguridad, situando a estas ciudades en la categoría de "Menos seguras". Por otro lado, en ciudades como Medellín y Bello Horizonte, la percepción predominante es que la seguridad ha mejorado, clasificándolas como "Más seguras". Finalmente, en ciudades como Ciudad de México, Montevideo y La Paz, la percepción de seguridad se mantiene estable, indicando que, para sus habitantes, la situación "sigue igual".
+
+# Punto 6
+
+```{r}
+Encuestas <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/ECC_completa_19426.csv", comment.char="#")
+Encuestas <- as.data.frame(Encuestas)
+Encuestas <- sqldf("select p30, ciudad2
+                   from Encuestas")
+```
+
+```{r}
+TablaContingencia <- table(Encuestas$p30, Encuestas$ciudad2)
+TablaContingencia
+rownames(TablaContingencia) <- c("Menos segura", "Igual", "Más segura")
+
+```
+
+```{r}
+Encuestas <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/ECC_completa_19426.csv", comment.char="#")
+Encuestas <- as.data.frame(Encuestas)
+Encuestas <- sqldf("select p17_b, ciudad2
+                   from Encuestas")
+```
+
+```{r}
+TablaP17 <- table(Encuestas$p17_b, Encuestas$ciudad2)
+TablaP17
+rownames(TablaP17) <- c("Nunca", "Casi nunca", "Casi siempre", "Siempre")
+
+```
+
+```{r}
+TablaContingenciaPreguntasCiudades <- rbind(TablaContingencia, TablaP17)
+TablaContingenciaPreguntasCiudades
+```
+
+```{r}
+ACSp30p17 <- CA(TablaContingenciaPreguntasCiudades, graph = F, row.sup = c(4:7))
+
+```
+
+```{r}
+p <- fviz_ca_biplot(ACSp30p17, 
+                    col.row = "red",
+                    col.col = "black",
+                    col.row.sup= "purple",
+                    repel = TRUE,
+                    title = "P17 Y P30")
+
+p + theme(
+  plot.title = element_text(hjust = 0.5),  
+  panel.border = element_rect(color = "black", fill = NA, size = 1)  
+)
+
+```
