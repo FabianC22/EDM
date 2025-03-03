@@ -1,0 +1,703 @@
+---
+title: "Taller Sexto"
+format: html
+editor: visual
+---
+
+
+
+```{r, echo=FALSE, message=FALSE}
+library(readxl)
+library(dplyr)
+library(factoextra)
+library(clusterCrit)
+library(NbClust)
+library(ggplot2)
+library(openxlsx)
+library(knitr)
+library(ggsci)
+library(NbClust)
+library(kableExtra)
+library(DT)
+```
+
+
+
+## Punto 1
+
+El indicador Scimago establece un ranking universitario basándose en la calidad de las publicaciones que estas realicen, el archivo que se utiliza para este ejercicio contiene datos de 149 Universidades Latinas y 11 indicadores de Scimago: SC.Lac.Ranking , SC.Ibe.Ranking SC.Co.Ranking, SC.Productividad, SC.Colaboracion.Interciol, SC.Impacto.normalizado, SC.Publicaciones.de.alta.calidad, SC.Indice.de.especializacion, SC.Indice.de.excelencia, SC.Liderazgo.cientifico, SC.Excelencia.con.liderazgo.
+
+En la siguiente tabla se muestran algunas universidades con los valores de estos indicadores
+
+```{r, echo=FALSE}
+
+
+# 📌 1. Cargar datos desde Excel
+df <-  read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/r14_Sci_Qs_Webometrics.csv", sep = ";")
+
+
+# 📌 2. Reemplazar NA por la media de cada columna (en caso de que haya quedado alguno)
+df <- df %>% mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+
+# 📌 3. Seleccionar solo las columnas que comienzan con "SC" y las columnas "Pais" y "UniPais"
+df_clustering <- df %>% select(Pais, UniPais, starts_with("SC"))
+
+# 📌 4. Normalizar los datos numéricos
+df_scaled <- df_clustering %>% select(starts_with("SC")) %>% scale()
+
+kable(head(df_clustering))
+```
+
+**Cálculo del indicador de Calinski-Harabasz para decidir el número de grupos:**
+
+Los valores del índice de Carlinski - Harabasz en la siguiente tabla y la gráfica indican que el número de grupos óptimo se obtiene donde el CH~k~ toma su mayor valor en este caso es de 3.
+
+```{r,echo=FALSE}
+# 📌 5. Determinar el número óptimo de clusters usando el índice de Caliński-Harabasz
+set.seed(42)
+res <- NbClust(df_scaled, distance = "euclidean", min.nc = 2, max.nc = 10, method = "kmeans", index = "ch")
+
+# Extraer el número óptimo de clusters
+k_optimo <- as.numeric(res$Best.nc[1])
+print(paste("Número óptimo de clusters según CH Index:", k_optimo))
+
+# Extraer valores del índice para cada K
+ch_values <- res$All.index
+k_values <- 2:10
+
+# Crear un dataframe con los valores de K y sus respectivos índices CH
+tabla_ch <- data.frame(Clusters = k_values, CH_Index = ch_values)
+
+# Mostrar la tabla en la consola
+kable(tabla_ch)
+```
+
+```{r, echo=FALSE}
+# 📌 6. Gráfico mejorado del índice de Caliński-Harabasz
+plot(k_values, ch_values, type = "b", pch = 19, col = "blue",
+     xlab = "Número de Clusters (K)", ylab = "Índice de Caliński-Harabasz",
+     main = "Selección de K usando CH Index",
+     xaxt = "n")
+
+axis(1, at = k_values, labels = k_values) # Añade los 10 valores en el eje X
+
+# Añadir los valores de K sobre cada punto
+text(k_values, ch_values, labels = k_values, pos = 3, col = "red", cex = 0.8)
+
+# 📌 7. Aplicar K-means con el número óptimo de clusters
+set.seed(42)
+final_kmeans <- kmeans(df_scaled, centers = k_optimo, nstart = 25)
+
+```
+
+En la siguiente tabla se muestran los 3 grupos que produce este agrupamiento, donde destaca el grupo 2 que solo cuenta con 17 universidades, una de las razones para que esto pase es porque aunque estan bien posicionadas no son las top, teniendo un menor producción científica que el grupo 3 (compuesta por las universidades top con alta producción cientiífica y colaboración internacional) pero significativa y mayor que el grupo 1, pues, en este ultimo grupo se encuentran universidades que tienen un menor impacto en la producción científica y menor énfasis en investigación
+
+```{r,echo=FALSE}
+# 📌 8. Agregar los clusters al dataframe original
+df_clustering$Cluster <- final_kmeans$cluster
+
+# 📌 9. Crear tablas de resumen
+
+# Tabla con países y su cluster asignado
+tabla_Unipaises <- df_clustering %>% select(UniPais, Cluster)
+tabla_paises <- df_clustering %>% select(Pais, Cluster)
+
+library(DT)
+
+cat("📌 Tabla: Universidades y sus Clusters\n")
+datatable(tabla_Unipaises)
+
+cat("📌 Tabla: Países y sus Clusters\n")
+datatable(tabla_paises)
+
+
+```
+
+**Tipificación de los grupos sugeridos por el índice de CH por los promedios de las variables:**
+
+Los promedios de las variables para los 3 grupos sugeridos por el índice de Calinski-Harabasz con el algoritmo K medias se muestran en la siguiente tabla ordenadas por el SC.Lack.Ranking.
+
+```{r,echo=FALSE}
+# 📌 8. Agregar los clusters al dataframe original
+df_clustering$Cluster <- final_kmeans$cluster
+
+# 📌 9. Crear tablas de resumen
+
+# Tabla con países y su cluster asignado
+tabla_Unipaises <- df_clustering %>% select(UniPais, Cluster)
+tabla_paises <- df_clustering %>% select(Pais, Cluster)
+
+library(DT)
+
+# Tabla de promedios por cluster
+resumen_media <- df_clustering %>%
+  group_by(Cluster) %>%
+  summarise(across(starts_with("SC"), mean, .names = "{.col}"))
+
+cat("📌Tabla de promedios por cluster ")
+datatable(resumen_media)
+
+
+```
+
+Se observa que el grupo 1 presenta los menores promedios en la mayoría de los indicadores, destacándose por su baja productividad y menor impacto de sus publicaciones. Además, el grupo 2 tiene los valores más altos en impacto normalizado y excelencia con liderazgol. Por otro lado, el grupo 3 es el más productivo con una diferencia bastante significativa y publicaciones en revistas de alto prestigio. Esto sugiere que el grupo 1 está más orientado a la enseñanza, mientras que el grupo 3 concentra las universidades más fuertes en investigación.
+
+En cuanto a los grados de homogeneidad, el grupo 3 es el que mayor la tiene pues, tiene la mayor varianza en la mayoria de indicadores , en cuanto a los grupos 2 y 1 tienen una mayor dispersión entre sus valores, es decir el grupo 3 agrupa instituciones más similares entre ellas, mientras los otros dos grupos presentan más diferencias en sus indicadores
+
+```{r,echo=FALSE}
+# ndefined📌 8. Agregar los clusters al dataframe original
+df_clustering$Cluster <- final_kmeans$cluster
+
+# 📌 9. Crear tablas de resumen
+
+# Tabla con países y su cluster asignado
+tabla_Unipaises <- df_clustering %>% select(UniPais, Cluster)
+tabla_paises <- df_clustering %>% select(Pais, Cluster)
+
+library(DT)
+
+# Tabla de varianzas por cluster
+resumen_varianza <- df_clustering %>%
+  group_by(Cluster) %>%
+  summarise(across(starts_with("SC"), var, .names = "{.col}"))
+
+
+cat("📌Tabla de varianzas por cluster ")
+datatable(resumen_varianza)
+
+```
+
+## Punto 2
+
+Ahora se van a construir los grupos de universidades según el indicador SC utilizando el íındice de Hartigan.
+
+En la siguiente tabla se muestran los valores del índice de Hartigan para diferentes números de grupos
+
+```{r,echo=FALSE, message=FALSE}
+
+# Leer el archivo Excel
+data <-  read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/r14_Sci_Qs_Webometrics.csv", sep = ";")
+
+# 📌 2. Reemplazar NA por la media de cada columna (en caso de que haya quedado alguno)
+df <- data %>% mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+
+# Seleccionar solo PAIS, Unipais y columnas que inician con "SC"
+cols_sc <- grep("^SC", names(data), value = TRUE)
+data_selected <- data[, c("Pais", "UniPais", cols_sc)]
+
+# Reemplazar valores faltantes con la media de cada columna
+for (col in cols_sc) {
+  data_selected[[col]][is.na(data_selected[[col]])] <- mean(data_selected[[col]], na.rm = TRUE)
+}
+
+# Remover columnas categóricas (PAIS y Unipais) para el clustering
+data_clustering <- data_selected[, cols_sc]
+
+# Aplicar NbClust con el criterio de Hartigan
+set.seed(123)  # Para reproducibilidad
+result <- NbClust(data_clustering, distance = "euclidean", min.nc = 2, max.nc = 10, method = "kmeans", index = "hartigan")
+
+# Extraer el número óptimo de clusters
+optimal_k <- result$Best.nc[1]
+
+# Mostrar resultado
+cat("\nEl número óptimo de clusters según el criterio de Hartigan es:", optimal_k, "\n")
+
+# Crear una tabla con los valores del índice de Hartigan
+hartigan_values <- data.frame(
+  "Número de grupos" = 2:10,
+  "Índice Hartigan" = result$All.index
+)
+
+# Imprimir la tabla en formato bonito
+datatable(hartigan_values)
+
+```
+
+Aquí podemos evidenciar que el número óptimo de grupos según el índice de Hartigan es 4, ya que del grupo 3 al 4 hay un salto muy grande (aprox 182) y a partir de ahí se puede decir que se estabiliza la variación de los grupos.
+
+```{r,echo=FALSE}
+#Gráfico
+colnames(hartigan_values) <- c("Num_Grupos", "Indice_Hartigan")
+
+ggplot(hartigan_values, aes(x = Num_Grupos, y = Indice_Hartigan)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_text(aes(label = Num_Grupos), vjust = -0.5, size = 5) +
+  theme_minimal() +
+  labs(title = "Valor del Índice de Hartigan por Número de Grupos",
+       x = "Número de grupos",
+       y = "Valor del Índice de Hartigan")
+
+
+```
+
+En la siguiente tabla se muestra la clasificación de las universidadespor cada grupo según el índice de Hartigan, resalta que en el grupo 1 solo está la Universidad de Sao Pablo (USP), ya que, en la mayoriía de indicadores del SC tiene los puntajes más altos y lejanos con respecto a los demás, en el grupo 2 esán las universidades top de latino américa con alto impacto en sus investigaciones, en cuanto a los grupos 3 y 4 tienen puntajes más diversos lo que sugiere un menor grado de productividad en investigación científica.
+
+```{r,echo=FALSE}
+# Asignar los datos a los clusters óptimos
+set.seed(123)
+kmeans_result <- kmeans(data_clustering, centers = optimal_k, nstart = 25)
+
+# Agregar la asignación de clusters a los datos originales
+data_selected$Cluster <- kmeans_result$cluster
+
+# Crear tabla de UniPais con sus clusters asignados
+tabla_unipais_cluster <- data_selected %>% select(UniPais, Cluster)
+tabla_pais_cluster <- data_selected %>% select(Pais, Cluster)
+
+# Mostrar la tabla en un formato bonito si usas R Markdown
+library(DT)
+
+cat("📌 Tabla: Universidades y sus Clusters\n")
+datatable(tabla_unipais_cluster)
+
+cat("📌 Tabla: Países y sus Clusters\n")
+datatable(tabla_pais_cluster)
+
+```
+
+En la siguiente tabla de medias se puede ver que el grupo 1 presenta los mejores valores, lo que indica que las universidades pertenecientes a este grupo (solo USP) presentan características muy destacadas en productividad, colaboración internacional, etc, por otro lado el grupo 2 y 4 tienen valores intermedios y el grupo 3 presenta los puntajes más bajos lo que se traduce en desempeños inferiores con respecto a las universidades de los otros grupos
+
+```{r,echo=FALSE}
+# Calcular los promedios por cluster
+promedios_por_cluster <- aggregate(. ~ Cluster, data = data_selected[, c(cols_sc, "Cluster")], 
+                                   FUN = mean)
+
+# Opcional: Mostrar las tablas en un formato bonito si usas R Markdown
+kable(promedios_por_cluster, caption = "Promedios de cada variable por cluster")
+```
+
+En la homogeneidad se tiene que el grupo 3 es el más disperso por sus altos valores de varianza en los indicadores, aunque menor que el 3, el grupo 4 también presenta una alta dispersión entre los desempeños de las universidades que la conforman, en cuanto al grupo 2 sus varianzas son más bajas asi que presenta una mayor similitud en el rendimiento de sus universidades, y el grupo 1 no tiene varianza porque solo está una universidad.
+
+```{r,echo=FALSE}
+# Calcular las varianzas por cluster
+varianzas_por_cluster <- aggregate(. ~ Cluster, data = data_selected[, c(cols_sc, "Cluster")], FUN = var)
+kable(varianzas_por_cluster, caption = "Varianzas de cada variable por cluster")
+```
+## Punto 3
+
+Observemos las tablas de cómo se dividen por paises los clusters para entender
+
+```{r,echo=FALSE}
+tabla_Unipaises <- df_clustering %>% select(UniPais, Cluster)
+tabla_Unipaises2 <- data_selected %>% select(UniPais, Cluster)
+
+tabla_UnipaisesU <- cbind(tabla_Unipaises, tabla_Unipaises2)
+
+datatable(tabla_UnipaisesU)
+```
+
+La primera diferencia notabla es que en el indicador de Carlinski-Harabasz hay 3 clusters, mientras tanto en el indicador de Hartigan hay 4, también que la mayoría de universidades terminó en lugares diferentes a excepción de algunas que se mantienen, pero en general su cambio fue notable.
+
+Ahora veamos los promedios.
+
+```{r,echo=FALSE}
+datatable(resumen_media)
+datatable(promedios_por_cluster)
+```
+
+Observamos que se ve mejor explicada en el indicador de Carlinski-Harabasz ya que tiene valores que tienen un sentido para lo que estamos haciendo ya que no hay valores tan desproporcionados excepto en productividad, mientras tanto en el indicador de Hartigan vemos que si tiene una desproporción en el ranking de la institución en América Latina, ranking de la institución en Iberoamérica, ranking de la institución en su país y en su productividad. En los otros brinda información más clara de qué grupos de universidades pueden ser mejor que otras.
+
+```{r,echo=FALSE}
+datatable(resumen_varianza)
+datatable(varianzas_por_cluster)
+```
+
+En la varianza podemos ver algo muy parecido a lo que pasaba con el promedio con las proporciones manejadas en cada cluster.
+
+## Punto 4
+
+Se realizara el agrupamiento para el ranking QS
+
+### Punto 4 - Carlinski-Harabasz
+
+```{r,echo=FALSE}
+#Cargar datos desde Excel
+df <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/r14_Sci_Qs_Webometrics.csv", sep = ";")
+
+#Reemplazar NA por la media de cada columna (en caso de que haya quedado alguno)
+df <- df %>% mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+
+#Seleccionar solo las columnas que comienzan con "QS" y las columnas "Pais" y "UniPais"
+df_clustering <- df %>% select(Pais, UniPais, starts_with("QS"))
+
+# Convertir columnas "QS" a numéricas
+df_clustering <- df_clustering %>%
+  mutate(across(starts_with("QS"), ~ as.numeric(gsub("[^0-9.]", "", .))))
+
+#Reemplazar NA por la media de cada columna (en caso de que haya quedado alguno)
+df_clustering <- df_clustering %>% mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+
+#Normalizar los datos numéricos
+df_scaled <- df_clustering %>% select(starts_with("QS")) %>% scale()
+
+df_scaled <- df_scaled %>%
+  as.data.frame() %>%
+  mutate(across(everything(), ~ ifelse(is.na(.) | is.nan(.) | is.infinite(.), mean(., na.rm = TRUE), .)))
+```
+
+Determinar el número óptimo de clusters usando el índice de Caliński-Harabasz, el nos indica que dos clusters son los optimos.
+
+
+```{r,echo=FALSE}
+set.seed(42)
+res <- NbClust(df_scaled, distance = "euclidean", min.nc = 2, max.nc = 10, method = "kmeans", index = "ch")
+
+# Extraer el número óptimo de clusters
+k_optimo <- as.numeric(res$Best.nc[1])
+print(paste("Número óptimo de clusters según CH Index:", k_optimo))
+
+# Extraer valores del índice para cada K
+ch_values <- res$All.index
+k_values <- 2:10
+```
+
+En la siguiente tabla vemos los valores de K y sus respectivos índices CH
+
+```{r,echo=FALSE}
+tabla_ch <- data.frame(Clusters = k_values, CH_Index = ch_values)
+
+# Mostrar la tabla en la consola
+datatable(tabla_ch)
+```
+
+
+Gráfico del índice de Caliński-Harabasz
+
+Vemos que es suficiente ver que con dos grupos, recogen la información de los datos
+
+```{r,echo=FALSE}
+plot(k_values, ch_values, type = "b", pch = 19, col = "blue",
+     xlab = "Número de Clusters (K)", ylab = "Índice de Caliński-Harabasz",
+     main = "Selección de K usando CH Index",
+     xaxt = "n")
+
+axis(1, at = k_values, labels = k_values) # Añade los 10 valores en el eje X
+
+# Añadir los valores de K sobre cada punto
+text(k_values, ch_values, labels = k_values, pos = 3, col = "red", cex = 0.8)
+
+#Aplicar K-means con el número óptimo de clusters
+set.seed(42)
+final_kmeans <- kmeans(df_scaled, centers = k_optimo, nstart = 25)
+
+#Agregar los clusters al dataframe original
+df_clustering$Cluster <- final_kmeans$cluster
+```
+
+Crear tablas de resumen
+
+```{r,echo=FALSE}
+# Tabla con países y su cluster asignado
+tabla_Unipaises <- df_clustering %>% select(UniPais, Cluster)
+tabla_paises <- df_clustering %>% select(Pais, Cluster)
+
+# Tabla de promedios por cluster
+resumen_media <- df_clustering %>%
+  group_by(Cluster) %>%
+  summarise(across(starts_with("QS"), mean, .names = "{.col}"))
+
+# Tabla de varianzas por cluster
+resumen_varianza <- df_clustering %>%
+  group_by(Cluster) %>%
+  summarise(across(starts_with("QS"), var, .names = "{.col}"))
+```
+
+Media de los grupos.
+
+```{r,echo=FALSE}
+datatable(resumen_media)
+```
+
+Varianza de los grupos. 
+
+```{r,echo=FALSE}
+datatable(resumen_varianza)
+```
+
+### Punto 4 - Hartigan
+
+Reutilizando la base anterior df seleccionamos solo PAIS, Unipais y columnas que inician con "QS"
+
+```{r,echo=FALSE}
+cols_qs <- grep("^QS", names(df), value = TRUE)
+data_selected <- df[, c("Pais", "UniPais", cols_qs)]
+
+# Convertir columnas "QS" a numéricas
+data_selected <- data_selected %>%
+  mutate(across(starts_with("QS"), ~ as.numeric(gsub("[^0-9.]", "", .))))
+
+# Reemplazar valores faltantes con la media de cada columna
+for (col in cols_qs) {
+  data_selected[[col]][is.na(data_selected[[col]])] <- mean(data_selected[[col]], na.rm = TRUE)
+}
+
+# Remover columnas categóricas (PAIS y Unipais) para el clustering
+data_clustering <- data_selected[, cols_qs]
+```
+
+Aplicar NbClust con el criterio de Hartigan
+
+```{r,echo=FALSE}
+set.seed(123)  # Para reproducibilidad
+result <- NbClust(data_clustering, distance = "euclidean", min.nc = 2, max.nc = 10, method = "kmeans", index = "hartigan")
+
+# Extraer el número óptimo de clusters
+optimal_k <- result$Best.nc[1]
+
+# Mostrar resultado
+cat("\nEl número óptimo de clusters según el criterio de Hartigan es:", optimal_k, "\n")
+```
+
+Crear una tabla con los valores del índice de Hartigan
+
+```{r,echo=FALSE}
+hartigan_values <- data.frame(
+  "Número de grupos" = 2:10,
+  "Índice Hartigan" = result$All.index
+)
+
+# Imprimir la tabla
+datatable(hartigan_values)
+```
+
+Gráfico
+
+```{r,echo=FALSE}
+colnames(hartigan_values) <- c("Num_Grupos", "Indice_Hartigan")
+
+ggplot(hartigan_values, aes(x = Num_Grupos, y = Indice_Hartigan)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_text(aes(label = Num_Grupos), vjust = -0.5, size = 5) +
+  theme_minimal() +
+  labs(title = "Valor del Índice de Hartigan por Número de Grupos",
+       x = "Número de grupos",
+       y = "Valor del Índice de Hartigan")
+```
+
+```{r}
+#Mostrar tabla
+kable(hartigan_values, caption = "Valores del índice de Hartigan por número de grupos")
+```
+
+Mostrar tablas de promedios y varianzas
+
+```{r,echo=FALSE}
+# Asignar los datos a los clusters óptimos
+set.seed(123)
+kmeans_result <- kmeans(data_clustering, centers = optimal_k, nstart = 25)
+
+# Agregar la asignación de clusters a los datos originales
+data_selected$Cluster <- kmeans_result$cluster
+
+# Calcular los promedios por cluster
+promedios_por_cluster <- aggregate(. ~ Cluster, data = data_selected[, c(cols_qs, "Cluster")], FUN = mean)
+
+# Calcular las varianzas por cluster
+varianzas_por_cluster <- aggregate(. ~ Cluster, data = data_selected[, c(cols_qs, "Cluster")], FUN = var)
+```
+
+```{r,echo=FALSE}
+kable(promedios_por_cluster, caption = "Promedios de cada variable por cluster")
+```
+
+```{r,echo=FALSE}
+kable(varianzas_por_cluster, caption = "Varianzas de cada variable por cluster")
+```
+
+
+## Punto 5
+
+```{r, echo=FALSE}
+R14 <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/r14_Sci_Qs_Webometrics.csv", sep = ";")
+SC <- R14[ ,c(2,17:24)]
+SC[is.na(SC)] <- 0
+
+
+SC <- SC %>%
+group_by(Pais) %>%
+summarize(across(1:8, mean))
+  
+
+SC <- as.data.frame(SC)
+rownames(SC) <- SC$Pais
+SC <- SC[ ,-1]
+SC <- scale(SC)
+colnames(SC) <- c("Productividad", "Colaboración interciol", "Impacto normalizado", "Publicaciones de alta calidad", "Indice de especialización", "Indice de excelencia", "Liderazgo científico", "Excelencia con liderazgo")
+
+
+
+kable(round(SC,4), format = "html", booktabs = T, align = 'c') %>%
+  kable_styling(latex_options = c("striped", "scale_down", 
+                                  "hold_position"))
+
+
+```
+
+```{r, echo=FALSE}
+require(FactoMineR)
+ACPQS <- PCA(SC, graph = F)
+```
+
+
+```{r, echo=FALSE}
+kable(round(ACPQS$eig,4), format = "html", booktabs = T, 
+      align = 'c', col.names = c("Valor propio", "Porcentaje varianza", 
+                                 "Porcentaje varianza acumulado")) %>%
+  kable_styling(latex_options = c("striped", "scale_down", 
+                                  "hold_position")) 
+
+
+```
+```{r, echo=FALSE}
+ACPQS <- PCA(SC, graph = F, ncp = 2)
+HCPC <- HCPC(ACPQS, nb.clust = -1, min = 2, max = 5, graph = F)
+
+
+```
+
+```{r, echo=FALSE}
+kable(HCPC$data.clust, format = "html", booktabs = T, align = 'c') %>%
+  kable_styling(latex_options = c("striped", "scale_down", 
+                                  "hold_position"))
+
+```
+```{r, echo=FALSE}
+# Gráfico Dendograma
+plot.HCPC(HCPC, axes = c(1,2), choice = "tree", title = "Agrupamiento
+          Jerárquico")
+
+```
+```{r, echo=FALSE}
+# Plano factorial
+fviz_cluster(HCPC, repel = TRUE, main = "Grupos en el plano factorial", 
+             xlab = "Dimensión 1 (35.7%)", ylab = "Dimensión 2 (20.8%)",
+             ellipse.type = "norm", ellipse.alpha = 0.2, shape = 20,
+             pointsize = 1)
+
+
+```
+
+
+
+Al analizar la gráfica, podemos determinar que dentro de cada grupo se observa una dispersión notable. Esto refleja que, a pesar de las similitudes generales que justifican su agrupación (similitud en sus indicadores), existen diferencias internas significativas. Esta variabilidad sugiere que, aunque los países comparten patrones amplios, también presentan particularidades o matices que los distinguen dentro de su propio grupo.
+
+Un ejemplo que podemos visualizar en el dendrograma es el del grupo 2. Países como Brasil y Chile forman parte de este grupo, pero presentan diferencias internas a pesar de estar agrupados por sus grandes similitudes. Esto confirma que, aunque dos objetos se encuentren en el mismo grupo, no son del todo iguales. 
+
+
+## Punto 6
+
+Construir una agrupación jerárquica por países utilizando la salida del PCA con los indicadores del Qs, tipificar los grupos como en el ejemplo 1.12.1.
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(NbClust)
+library(kableExtra)
+library(FactoMineR)
+library(factoextra)
+
+
+Rankings <- read.csv2("C:/Users/fabia/OneDrive - Universidad Nacional de Colombia/UNAL/Descriptiva multivariada/Talleres/Recopilación/Bases de datos/r14_Sci_Qs_Webometrics.csv", sep = ";")
+
+RankingQS <- Rankings[ ,c(2,9:15)]
+
+RankingQS[is.na(RankingQS)] <- 0
+
+RankingQS <- RankingQS %>%
+             group_by(Pais) %>%
+             summarize(across(1:7, mean))
+
+RankingQS <- as.data.frame(RankingQS)
+
+rownames(RankingQS) <- RankingQS$Pais
+RankingQS <- RankingQS[ ,-1]
+RankingQS <- scale(RankingQS)
+
+colnames(RankingQS) <- c("Reputación Académica", "Reputación entre 
+                         empleadores", "Estudiantes por profesor", "Artículos
+                         por docente", "Citas por artículo", "Docentes con
+                         doctorado", "Impacto web")
+
+kable(round(RankingQS,4), format = "html", booktabs = T, align = 'c') %>%
+      kable_styling(latex_options = c("striped", "scale_down", 
+                                      "hold_position")) 
+```
+
+```{r,echo=FALSE}
+
+ACPQS <- PCA(RankingQS, graph = F)
+
+kable(round(ACPQS$eig,4), format = "html", booktabs = T, 
+      align = 'c', col.names = c("Valor propio", "Porcentaje varianza", 
+                                 "Porcentaje varianza acumulado")) %>%
+      kable_styling(latex_options = c("striped", "scale_down", 
+                                  "hold_position")) 
+```
+
+```{r, fig.width = 10, fig.height = 7, dpi = 300,echo=FALSE}
+
+ACPQS <- PCA(RankingQS, graph = F, ncp = 2)
+
+HCPC <- HCPC(ACPQS, nb.clust = -1, min = 2, max = 5, graph = F)
+
+kable(HCPC$data.clust, format = "html", booktabs = T, align = 'c') %>%
+      kable_styling(latex_options = c("striped", "scale_down", 
+                                      "hold_position"))
+```
+
+```{r,echo=FALSE}
+
+
+plot.HCPC(HCPC, axes = c(1,2), choice = "tree", title = "Agrupamiento
+          Jerárquico")
+```
+
+```{r, fig.width = 10, fig.height = 7, dpi = 300, echo=FALSE}
+
+fviz_cluster(HCPC, repel = TRUE, main = "Grupos en el plano actorial", 
+             xlab = "Dimensión 1 (35.7%)", ylab = "Dimensión 2 (20.8%)",
+             ellipse.type = "confidence", ellipse.alpha = 0.2, shape = 20,
+             pointsize = 1)
+```
+
+Los resultados de la gráfica muestran que los países dentro de cada grupo tienden a agruparse en regiones cercanas del espacio factorial, lo que indica similitudes en varios indicadores del ranking QS. Sin embargo, a diferencia de otros análisis, los grupos no están estrictamente separados en cuadrantes distintos, lo que sugiere que no existen fronteras rígidas entre ellos y que algunos países pueden compartir características similares pese a pertenecer a distintos grupos.
+
+Dentro de los grupos, se observa cierta dispersión, lo que indica que, aunque los países comparten similitudes generales, pueden presentar diferencias internas significativas en algunos indicadores clave. Estas diferencias pueden estar relacionadas con la reputación académica, la producción científica o la internacionalización, aspectos que influyen en la clasificación final de las universidades de cada país.
+
+Además, la posición relativa de los países sugiere que los factores utilizados capturan principalmente diferencias en términos de impacto de la investigación y prestigio institucional. Aquellos países situados en posiciones extremas en los factores probablemente destacan o presentan rezagos en dimensiones específicas del ranking QS, como publicaciones altamente citadas o reputación académica.
+
+En general, los resultados muestran que si bien existen patrones de agrupación, estos no son absolutamente rígidos, y la diferenciación entre países depende en gran medida de cómo se combinan los distintos indicadores del ranking.
+
+## Punto 7
+
+
+### Análisis del indicador SC para las universidades: 
+
+El análisis del indicador SC mediante los criterios de Calinski-Harabasz y Hartigan revela diferencias significativas en la clasificación de universidades según su producción científica. Mientras que el método de Calinski-Harabasz agrupa a las universidades en tres categorías según su impacto en la investigación, destacando un grupo intermedio con producción significativa pero sin alcanzar a las universidades top, el índice de Hartigan resalta la excepcionalidad de la Universidad de São Paulo (USP) al posicionarla en un grupo único debido a su destacado desempeño.
+
+Ambos enfoques muestran una clara diferenciación entre las universidades con alta productividad científica y colaboración internacional, aquellas con producción intermedia, y las que tienen un menor énfasis en la investigación. Esto sugiere que los criterios utilizados afectan la segmentación y ofrecen perspectivas complementarias sobre la estructura del sistema universitario en términos de impacto científico.
+
+
+
+
+### Análisis del indicador Qs: 
+
+Utilizando el índice Carlinski-Harabasz vemos que son suficientes dos agrupaciones  y para el índice de Hartigan son suficientes cuatro agrupaciones. 
+ 
+ 
+### Agrupación jerárquica:
+ 
+ 
+Para el análisis de indicador SC, en la gráfica evidencia que, si bien los grupos se forman en función de similitudes en sus indicadores, existe una dispersión notable dentro de cada uno. Esto indica que, aunque los países comparten patrones generales, presentan diferencias internas significativas que los distinguen dentro de su propio grupo.
+
+Un claro ejemplo de esto se observa en el grupo 2 del dendrograma, donde países como Brasil y Chile comparten grandes similitudes pero también muestran particularidades que los diferencian. Esto confirma que pertenecer al mismo grupo no implica homogeneidad absoluta, sino más bien una proximidad relativa en ciertos aspectos clave.
+
+
+
+
+Los resultados de la gráfica indican que los países dentro de cada grupo tienden a ubicarse en regiones cercanas dentro del espacio factorial, reflejando similitudes en varios indicadores del ranking QS. No obstante, la ausencia de una separación estricta entre cuadrantes sugiere que las fronteras entre los grupos no son rígidas. Esto implica que algunos países pueden compartir características similares a pesar de pertenecer a distintos grupos, evidenciando una continuidad en lugar de una segmentación tajante en su clasificación.
